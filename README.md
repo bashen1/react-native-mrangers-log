@@ -19,7 +19,7 @@ iOS SDK Version: 5.6.4
 
 ### iOS
 
-1. 打开`ios/Podfile`文件，添加以下（百川仓库）
+1. 打开`ios/Podfile`文件，添加以下
 ```
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 ·······
