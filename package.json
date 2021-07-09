@@ -1,6 +1,6 @@
 {
   "name": "react-native-mrangers-log",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "RangersAppLog ReactNativePlugin",
   "main": "index.js",
   "scripts": {
