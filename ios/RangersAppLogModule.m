@@ -2,13 +2,36 @@
 #import <React/RCTLog.h>
 #import <RangersAppLog/RangersAppLog.h>
 
-@implementation RangersAppLogModule
+@implementation RangersAppLogModule {
+    NSString *appIdGlobal;
+}
 
 RCT_EXPORT_MODULE(RangersAppLogModule)
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(handleOpenURL:)
+                                                     name:@"RCTOpenURLNotification"
+                                                   object:nil];
+    }
+    return self;
+}
+
+- (void)handleOpenURL:(NSNotification *)note {
+    NSDictionary *userInfo = note.userInfo;
+    NSString *url = userInfo[@"url"];
+    NSURL *URL = [NSURL URLWithString:url];
+    if (![appIdGlobal isEqual: @""]) {
+        [[BDAutoTrackSchemeHandler sharedHandler] handleURL:URL appID: appIdGlobal scene:nil];
+    }
+}
 
 RCT_EXPORT_METHOD(init:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     NSString *appId = @"";
+    appIdGlobal = @"";
     NSString *appName = @"";
     NSString *channel = @"App Store";
     BOOL abEnable = YES;
@@ -20,6 +43,7 @@ RCT_EXPORT_METHOD(init:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)r
   
     if ((NSString *)params[@"appId"] != nil) {
         appId = (NSString *)params[@"appId"];
+        appIdGlobal = appId;
     }
     
     if ((NSString *)params[@"appName"] != nil) {
