@@ -57,18 +57,15 @@ defaultConfig {
 
 | 接口名                     | 功能                              | 参数                                                        | 支持平台     |
 |----------------------------|-----------------------------------|-------------------------------------------------------------|--------------|
+| init | 初始化 | 参数：字典，不可空，参考index.js | iOS，Android |
 | setUserUniqueId            | 设置用户登录 Id                   | 参数1：string，可空。user_unique_id。                       | iOS, Android |
 | setHeaderInfo              | 自定义header信息 设置用户公共属性 | 参数1：字典，可空。自定义header信息。                       | iOS, Android |
 | onEventV3                  | 生成自定义埋点                    | 参数1：string，非空。事件名。 参数2：字典，可空。事件参数。 | iOS, Android |
 | getDeviceID                | 获取did                   | 参数：无 返回：str。                                        | iOS, Android          |
 | getAbSdkVersion            | 获取全部客户端和服务端已曝光参数  | 参数：无 返回：str                                          | iOS, Android          |
+| getAllAbSdkVersion         | 获取全部客户端和服务端曝光参数（Android下目前只在获取与更新的时候才会有返回值，请做好app本地缓存） | 参数：无 返回：str                                          | iOS, Android          |
 | getABTestConfigValueForKey | 获取AB测试的配置，若不存在返回nil | 参数1: str, ABTest配置的key 返回：str或nil                  | iOS, Android          |
-| init | 初始化 | 参数：字典，不可空，参考index.js | iOS，Android |
 
-
-## Contributing
-
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
 ## License
 

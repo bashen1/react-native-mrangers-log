@@ -130,6 +130,12 @@ RCT_REMAP_METHOD(getAbSdkVersion, getAbSdkVersionWithResolver:(RCTPromiseResolve
   resolve(allAbVids);
 }
 
+RCT_REMAP_METHOD(getAllAbSdkVersion, getAllAbSdkVersionWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+  NSString *allAbVids = [BDAutoTrack allAbVids];
+  resolve(allAbVids);
+}
+
 RCT_REMAP_METHOD(getABTestConfigValueForKey, getABTestConfigValueForKey:(NSString *)key defaultValue:(NSString *)defaultValue resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   id ret = [BDAutoTrack ABTestConfigValueForKey:key defaultValue:defaultValue];

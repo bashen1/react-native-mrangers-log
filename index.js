@@ -1,4 +1,4 @@
-import {NativeModules} from 'react-native';
+import {NativeModules, Platform} from 'react-native';
 const {RangersAppLogModule} = NativeModules;
 
 class RangersAppLog {
@@ -45,11 +45,39 @@ class RangersAppLog {
   };
 
   /**
-   * 获取实验参数
+   * 获取实验参数（曝光的）
    * @returns {Promise<*>}
    */
   static getAbSdkVersion = async () => {
     return await RangersAppLogModule.getAbSdkVersion();
+  };
+
+  /**
+   * 获取实验参数
+   * @returns {Promise<*>}
+   */
+  static getAllAbSdkVersion = async () => {
+    let res = '';
+    if (Platform.OS === 'ios') {
+      //ios 14320,14338
+      res = await RangersAppLogModule.getAllAbSdkVersion();
+    } else {
+      //android null或者{"name":{"val":"1","vid":"20511"},"ttttt":{"val":"aa","vid":"20670"}}
+      let resStr = await RangersAppLogModule.getAllAbSdkVersion();
+      if ((resStr ?? '') !== '' && (resStr ?? '') !== 'null') {
+        try {
+          let resObj = JSON.parse(resStr);
+          let vidArr = [];
+          Object.keys(resObj).map(key => {
+            if ((resObj?.[key]?.vid??'') !== '') {
+              vidArr.push(resObj?.[key]?.vid ?? '');
+            }
+          })
+          res = vidArr.join(',');
+        } catch (e){}
+      }
+    }
+    return res;
   };
 
   /**
