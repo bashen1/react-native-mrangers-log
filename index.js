@@ -72,7 +72,8 @@ class RangersAppLog {
             if ((resObj?.[key]?.vid??'') !== '') {
               vidArr.push(resObj?.[key]?.vid ?? '');
             }
-          })
+          });
+          res = [...new Set(res)];
           res = vidArr.join(',');
         } catch (e){}
       }
