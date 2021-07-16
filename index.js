@@ -99,6 +99,22 @@ class RangersAppLog {
   static getDeviceID = async () => {
     return await RangersAppLogModule.getDeviceID();
   };
+
+  /**
+   * 获取 UUID
+   * @returns {Promise<*>}
+   */
+  static getUserUniqueID = async () => {
+    return await RangersAppLogModule.getUserUniqueID();
+  };
+
+  /**
+   * 获取SSID
+   * @returns {Promise<*>}
+   */
+  static getSsid = async () => {
+    return await RangersAppLogModule.getSsid();
+  };
 }
 
 export default RangersAppLog;

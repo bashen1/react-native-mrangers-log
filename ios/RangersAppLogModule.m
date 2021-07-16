@@ -150,6 +150,22 @@ RCT_REMAP_METHOD(getDeviceID, getDeviceIDWithResolver:(RCTPromiseResolveBlock)re
   resolve(did);
 }
 
+RCT_REMAP_METHOD(getUserUniqueID, getUserUniqueIDWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+  // RCTLogInfo(@"[Native]: %s", __func__);
+  NSString *did = [BDAutoTrack userUniqueID];
+  // RCTLogInfo(@"[Native]: %@", did);
+  resolve(did);
+}
+
+RCT_REMAP_METHOD(getSsid, getSsidWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+  // RCTLogInfo(@"[Native]: %s", __func__);
+  NSString *did = [BDAutoTrack ssID];
+  // RCTLogInfo(@"[Native]: %@", did);
+  resolve(did);
+}
+
 // Example method
 // See // https://reactnative.dev/docs/native-modules-ios
 RCT_REMAP_METHOD(multiply,

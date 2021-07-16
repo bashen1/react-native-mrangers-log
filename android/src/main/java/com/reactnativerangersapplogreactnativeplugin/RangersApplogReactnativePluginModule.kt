@@ -127,4 +127,14 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
     fun getDeviceID(promise: Promise) {
         promise.resolve(AppLog.getDid())
     }
+
+    @ReactMethod
+    fun getUserUniqueID(promise: Promise) {
+        promise.resolve(AppLog.getUserUniqueID())
+    }
+
+    @ReactMethod
+    fun getSsid(promise: Promise) {
+        promise.resolve(AppLog.getSsid())
+    }
 }
