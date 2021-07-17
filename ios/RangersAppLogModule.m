@@ -142,6 +142,10 @@ RCT_REMAP_METHOD(getABTestConfigValueForKey, getABTestConfigValueForKey:(NSStrin
   resolve(ret);
 }
 
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getABTestConfigValueForKeySync:(NSString *)key defaultValue:(NSString *)defaultValue) {
+    return [BDAutoTrack ABTestConfigValueForKey:key defaultValue:defaultValue];
+}
+
 RCT_REMAP_METHOD(getDeviceID, getDeviceIDWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   // RCTLogInfo(@"[Native]: %s", __func__);

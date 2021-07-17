@@ -123,6 +123,11 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
         promise.resolve(AppLog.getAbConfig(key, defaultValue))
     }
 
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    fun getABTestConfigValueForKeySync(key: String, defaultValue: String?): String? {
+        return AppLog.getAbConfig(key, defaultValue)
+    }
+
     @ReactMethod
     fun getDeviceID(promise: Promise) {
         promise.resolve(AppLog.getDid())

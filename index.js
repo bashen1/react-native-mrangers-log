@@ -82,13 +82,24 @@ class RangersAppLog {
   };
 
   /**
-   * 获取 AB 测试的配置
+   * 获取 AB 测试的配置（异步获取）
    * 第二个参数 "0" 为实验兜底值，建议和对照组 value 一致，在网络延迟或实验停止时返回此值
    */
   static getABTestConfigValueForKey = async (key = '', defaultValue = '0') => {
     return await RangersAppLogModule.getABTestConfigValueForKey(
       key,
       defaultValue,
+    );
+  };
+
+  /**
+   * 获取 AB 测试的配置（同步获取）
+   * 第二个参数 "0" 为实验兜底值，建议和对照组 value 一致，在网络延迟或实验停止时返回此值
+   */
+  static getABTestConfigValueForKeySync = (key = '', defaultValue = '0') => {
+    return RangersAppLogModule.getABTestConfigValueForKeySync(
+        key,
+        defaultValue,
     );
   };
 
