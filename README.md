@@ -64,7 +64,8 @@ defaultConfig {
 | getDeviceID                | 获取did                   | 参数：无 返回：str。                                        | iOS, Android          |
 | getAbSdkVersion            | 获取全部客户端和服务端已曝光参数  | 参数：无 返回：str                                          | iOS, Android          |
 | getAllAbSdkVersion         | 获取全部客户端和服务端曝光参数（Android下目前只在获取与更新的时候才会有返回值，请做好app本地缓存） | 参数：无 返回：str                                          | iOS, Android          |
-| getABTestConfigValueForKey | 获取AB测试的配置，若不存在返回nil | 参数1: str, ABTest配置的key 返回：str或nil                  | iOS, Android          |
+| getABTestConfigValueForKey | 【异步】获取AB测试的配置，若不存在返回nil | 参数1: str, ABTest配置的key 返回：str或nil                  | iOS, Android          |
+| getABTestConfigValueForKeySync | 【同步】获取AB测试的配置，若不存在返回nil | 参数1: str, ABTest配置的key 返回：str或nil | iOS, Android |
 | getUserUniqueID | 获取绑定后的uuid | 参数：无 返回：str、null、undefined | iOS, Android |
 | getSsid | 获取ssid | 参数：无 返回：str、null、undefined | iOS, Android |
 
