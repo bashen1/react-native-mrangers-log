@@ -36,6 +36,18 @@ RCT_EXPORT_MODULE(RangersAppLogModule)
     }
 }
 
+/**
+ 初始化SDK
+ params
+ {
+     appId
+     appName
+     channel
+     abEnable
+     showDebugLog
+     logNeedEncrypt
+ }
+ */
 RCT_EXPORT_METHOD(init:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     NSString *appId = @"";
@@ -102,12 +114,18 @@ RCT_EXPORT_METHOD(init:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)r
     }
 }
 
+/**
+ 统计事件埋点
+ */
 RCT_EXPORT_METHOD(onEventV3:(NSString *)event params:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   RCTLogInfo(@"%s", __func__);
   [BDAutoTrack eventV3:event params:params];
 }
 
+/**
+ 设置事件公共属性
+ */
 RCT_EXPORT_METHOD(setHeaderInfo:(NSDictionary *)customHeader resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   for (NSString *key in customHeader) {
@@ -118,34 +136,105 @@ RCT_EXPORT_METHOD(setHeaderInfo:(NSDictionary *)customHeader resolver:(RCTPromis
   }
 }
 
+/**
+ 移除事件公共属性
+ */
+RCT_EXPORT_METHOD(removeHeaderInfo:(NSString *)customKey resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+  [BDAutoTrack removeCustomHeaderValueForKey: customKey];
+}
+
+/**
+ 用户属性
+ 设置用户属性，存在则覆盖，不存在则创建
+ */
+RCT_EXPORT_METHOD(profileSet:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    [BDAutoTrack profileSet: params];
+}
+
+/**
+ 用户属性
+ 设置用户属性，存在则不设置，不存在则创建，适合首次相关的用户属性，比如首次访问时间等
+ */
+RCT_EXPORT_METHOD(profileSetOnce:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    [BDAutoTrack profileSetOnce: params];
+}
+
+/**
+ 用户属性
+ 设置数值类型的属性，可进行累加
+ */
+RCT_EXPORT_METHOD(profileIncrement:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    [BDAutoTrack profileIncrement: params];
+}
+
+/**
+ 用户属性
+ 向用户的某个 List 类型的属性添加属性，比如爱好
+ */
+RCT_EXPORT_METHOD(profileAppend:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    [BDAutoTrack profileAppend: params];
+}
+
+/**
+ 用户属性
+ 删除用户的属性
+ */
+RCT_EXPORT_METHOD(profileUnset:(NSString *)customKey resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    [BDAutoTrack profileUnset: customKey];
+}
+
+/**
+ 设置UUID
+ */
 RCT_EXPORT_METHOD(setUserUniqueId:(NSString *)userUniqueID resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   [BDAutoTrack setCurrentUserUniqueID:userUniqueID];
   resolve(userUniqueID);
 }
 
+/**
+ 获取全部的实验 id
+ */
 RCT_REMAP_METHOD(getAbSdkVersion, getAbSdkVersionWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   NSString *allAbVids = [BDAutoTrack allAbVids];
   resolve(allAbVids);
 }
 
+/**
+ 获取全部的实验 id
+ */
 RCT_REMAP_METHOD(getAllAbSdkVersion, getAllAbSdkVersionWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   NSString *allAbVids = [BDAutoTrack allAbVids];
   resolve(allAbVids);
 }
 
+/**
+ 获取实验参数（异步）
+ */
 RCT_REMAP_METHOD(getABTestConfigValueForKey, getABTestConfigValueForKey:(NSString *)key defaultValue:(NSString *)defaultValue resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   id ret = [BDAutoTrack ABTestConfigValueForKey:key defaultValue:defaultValue];
   resolve(ret);
 }
 
+/**
+ 获取实验参数（同步）
+ */
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getABTestConfigValueForKeySync:(NSString *)key defaultValue:(NSString *)defaultValue) {
     return [BDAutoTrack ABTestConfigValueForKey:key defaultValue:defaultValue];
 }
 
+/**
+ 获取设备ID
+ */
 RCT_REMAP_METHOD(getDeviceID, getDeviceIDWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   // RCTLogInfo(@"[Native]: %s", __func__);
@@ -154,6 +243,9 @@ RCT_REMAP_METHOD(getDeviceID, getDeviceIDWithResolver:(RCTPromiseResolveBlock)re
   resolve(did);
 }
 
+/**
+ 获取UUID
+ */
 RCT_REMAP_METHOD(getUserUniqueID, getUserUniqueIDWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   // RCTLogInfo(@"[Native]: %s", __func__);
@@ -162,6 +254,9 @@ RCT_REMAP_METHOD(getUserUniqueID, getUserUniqueIDWithResolver:(RCTPromiseResolve
   resolve(did);
 }
 
+/**
+ 获取SSID
+ */
 RCT_REMAP_METHOD(getSsid, getSsidWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   // RCTLogInfo(@"[Native]: %s", __func__);

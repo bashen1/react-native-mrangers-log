@@ -55,17 +55,46 @@ defaultConfig {
 
 ## 插件接口文档
 
+### 基础接口
+
 | 接口名                     | 功能                              | 参数                                                        | 支持平台     |
 |----------------------------|-----------------------------------|-------------------------------------------------------------|--------------|
 | init | 初始化 | 参数：字典，不可空，参考index.js | iOS，Android |
 | setUserUniqueId            | 设置用户登录 Id                   | 参数1：string，可空。user_unique_id。                       | iOS, Android |
-| setHeaderInfo              | 自定义header信息 设置用户公共属性 | 参数1：字典，可空。自定义header信息。                       | iOS, Android |
 | onEventV3                  | 生成自定义埋点                    | 参数1：string，非空。事件名。 参数2：字典，可空。事件参数。 | iOS, Android |
-| getDeviceID                | 获取did                   | 参数：无 返回：str。                                        | iOS, Android          |
+
+### 用户属性
+
+| 接口名                     | 功能                              | 参数                                                        | 支持平台     |
+|----------------------------|-----------------------------------|-------------------------------------------------------------|--------------|
+| profileSet              | 设置用户属性，存在则覆盖，不存在则创建 | 参数：字典，不可空。                       | iOS, Android |
+| profileSetOnce           | 设置用户属性，存在则不设置，不存在则创建，适合首次相关的用户属性，比如首次访问时间等			  | 参数：字典，不可空。                      | iOS, Android |
+| profileIncrement              | 设置数值类型的属性，可进行累加 | 参数：字典，不可空。                       | iOS, Android |
+| profileAppend           | 向用户的某个 List 类型的属性添加属性，比如爱好			  | 参数：字典，不可空。                     | iOS, Android |
+| profileUnset           | 删除用户的属性			  | 参数：字符串，不可空                      | iOS, Android |
+
+
+### 事件公共属性
+
+| 接口名                     | 功能                              | 参数                                                        | 支持平台     |
+|----------------------------|-----------------------------------|-------------------------------------------------------------|--------------|
+| setHeaderInfo              | 自定义header信息 设置用户公共属性 | 参数1：字典，可空。自定义header信息。                       | iOS, Android |
+| removeHeaderInfo           | 移除自定义事件公共属性			  | 参数：字符串，不可空                      | iOS, Android |
+
+### A/B测试
+
+| 接口名                     | 功能                              | 参数                                                        | 支持平台     |
+|----------------------------|-----------------------------------|-------------------------------------------------------------|--------------|
 | getAbSdkVersion            | 获取全部客户端和服务端已曝光参数  | 参数：无 返回：str                                          | iOS, Android          |
 | getAllAbSdkVersion         | 获取全部客户端和服务端曝光参数（Android下目前只在获取与更新的时候才会有返回值，请做好app本地缓存） | 参数：无 返回：str                                          | iOS, Android          |
 | getABTestConfigValueForKey | 【异步】获取AB测试的配置，若不存在返回nil | 参数1: str, ABTest配置的key 返回：str或nil                  | iOS, Android          |
 | getABTestConfigValueForKeySync | 【同步】获取AB测试的配置，若不存在返回nil | 参数1: str, ABTest配置的key 返回：str或nil | iOS, Android |
+
+### 设备信息
+
+| 接口名                     | 功能                              | 参数                                                        | 支持平台     |
+|----------------------------|-----------------------------------|-------------------------------------------------------------|--------------|
+| getDeviceID                | 获取did                   | 参数：无 返回：str。                                        | iOS, Android          |
 | getUserUniqueID | 获取绑定后的uuid | 参数：无 返回：str、null、undefined | iOS, Android |
 | getSsid | 获取ssid | 参数：无 返回：str、null、undefined | iOS, Android |
 

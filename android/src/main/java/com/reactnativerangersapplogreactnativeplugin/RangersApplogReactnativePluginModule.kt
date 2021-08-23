@@ -104,6 +104,36 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
     }
 
     @ReactMethod
+    fun removeHeaderInfo(customKey: String, promise: Promise) {
+        AppLog.removeHeaderInfo(customKey);
+    }
+
+    @ReactMethod
+    fun profileSet(params: ReadableMap, promise: Promise) {
+        AppLog.profileSet(convertMapToJson(params))
+    }
+
+    @ReactMethod
+    fun profileSetOnce(params: ReadableMap, promise: Promise) {
+        AppLog.profileSetOnce(convertMapToJson(params))
+    }
+
+    @ReactMethod
+    fun profileIncrement(params: ReadableMap, promise: Promise) {
+        AppLog.profileIncrement(convertMapToJson(params))
+    }
+
+    @ReactMethod
+    fun profileAppend(params: ReadableMap, promise: Promise) {
+        AppLog.profileAppend(convertMapToJson(params))
+    }
+
+    @ReactMethod
+    fun profileUnset(customKey: String, promise: Promise) {
+        AppLog.profileUnset(customKey)
+    }
+
+    @ReactMethod
     fun setUserUniqueId(id: String, promise: Promise) {
         AppLog.setUserUniqueID(id)
     }

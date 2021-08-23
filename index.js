@@ -28,11 +28,59 @@ class RangersAppLog {
   };
 
   /**
-   * 设置公共属性
+   * 设置事件公共属性
    * @param headerInfo
    */
   static setHeaderInfo = (headerInfo = {}) => {
     RangersAppLogModule.setHeaderInfo(headerInfo);
+  };
+
+  /**
+   * 移除事件公共属性
+   * @param customKey
+   */
+   static removeHeaderInfo = (customKey = '') => {
+    customKey !=='' && RangersAppLogModule.removeHeaderInfo(customKey);
+  };
+
+  /**
+   * 设置用户属性，存在则覆盖，不存在则创建
+   * @param params
+   */
+   static profileSet = (params = {}) => {
+    RangersAppLogModule.profileSet(params);
+  };
+
+  /**
+   * 设置用户属性，存在则不设置，不存在则创建，适合首次相关的用户属性，比如首次访问时间等
+   * @param params
+   */
+   static profileSetOnce = (params = {}) => {
+    RangersAppLogModule.profileSetOnce(params);
+  };
+
+  /**
+   * 设置数值类型的属性，可进行累加
+   * @param params
+   */
+   static profileIncrement = (params = {}) => {
+    RangersAppLogModule.profileIncrement(params);
+  };
+
+  /**
+   * 向用户的某个 List 类型的属性添加属性，比如爱好
+   * @param params
+   */
+   static profileAppend = (params = {}) => {
+    RangersAppLogModule.profileAppend(params);
+  };
+
+  /**
+   * 删除用户的属性
+   * @param customKey
+   */
+   static profileUnset = (customKey = '') => {
+    RangersAppLogModule.profileUnset(customKey);
   };
 
   /**
