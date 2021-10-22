@@ -11,12 +11,31 @@ class RangersAppLog {
    *     channel: String,
    *     abEnable: String(true/false),
    *     showDebugLog: String(true/false),
-   *     logNeedEncrypt: String(true/false)
+   *     logNeedEncrypt: String(true/false),
+   *     autoStart: String(true/false),
+   *     host: String
    * }
    */
-  static init = (params = {}) => {
+  static init = (params = {
+    appId: '',
+    appName: '',
+    channel: '',
+    abEnable: 'true',
+    showDebugLog: 'false',
+    logNeedEncrypt: 'true',
+    autoStart: 'true',
+    host: ''
+  }) => {
     (params.appId ?? '') !== '' && RangersAppLogModule.init(params);
   };
+  
+  /**
+   * 设置是否自启动，如果用户已经授权的情况下设为true，否则设为false
+   * false的情况下必须在用户同意隐私弹窗后调用，否则不会存储和上报事件
+   */
+  static start = () => {
+    RangersAppLogModule.start();
+  }
 
   /**
    * 自定义事件
@@ -93,6 +112,14 @@ class RangersAppLog {
   };
 
   /**
+   * 清除业务 id
+   * user_unique_id
+   */
+  static clearUserUniqueId = () => {
+    RangersAppLogModule.clearUserUniqueId();
+  }
+
+  /**
    * 获取实验参数（曝光的）
    * @returns {Promise<*>}
    */
@@ -150,6 +177,16 @@ class RangersAppLog {
         defaultValue,
     );
   };
+
+  /**
+   * 获取ABTest相关配置
+   * 返回ABTest的所有的Configs值
+   * 此接口不会触发曝光，可以随意读取。
+   * 如果正常为了做实验，请勿使用此接口，请使用getABTestConfigValueForKey、getABTestConfigValueForKeySync接口
+   */
+  static getAllAbTestConfigs = async () => {
+    return await RangersAppLogModule.getAllAbTestConfigs();
+  }
 
   /**
    * 获取 did

@@ -46,6 +46,8 @@ RCT_EXPORT_MODULE(RangersAppLogModule)
      abEnable
      showDebugLog
      logNeedEncrypt
+     host
+     autoStart
  }
  */
 RCT_EXPORT_METHOD(init:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
@@ -60,6 +62,9 @@ RCT_EXPORT_METHOD(init:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)r
     NSString *showDebugLogStr = @"false";
     BOOL logNeedEncrypt = YES;
     NSString *logNeedEncryptStr = @"true";
+    NSString *host = @"";
+    BOOL autoStart = YES;
+    NSString *autoStartStr = @"true";
   
     if ((NSString *)params[@"appId"] != nil) {
         appId = (NSString *)params[@"appId"];
@@ -100,8 +105,14 @@ RCT_EXPORT_METHOD(init:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)r
             logNeedEncrypt = NO;
         }
     }
+    
     if (![appId isEqual: @""]) {
-        BDAutoTrackConfig *config = [BDAutoTrackConfig configWithAppID: appId]; //如不清楚请联系专属客户成功经理
+        BDAutoTrackConfig *config;
+        if ([BDAutoTrackConfig respondsToSelector:@selector(configWithAppID:launchOptions:)]) {
+            config = [BDAutoTrackConfig configWithAppID:appId launchOptions:nil];
+        } else {
+            config = [BDAutoTrackConfig configWithAppID:appId];
+        }
         /* 数据上报*/
         config.serviceVendor = BDAutoTrackServiceVendorCN;
         config.appName = appName; // 与您申请 APPID 时的 app_name 一致
@@ -111,7 +122,41 @@ RCT_EXPORT_METHOD(init:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)r
         config.logger = ^(NSString * _Nullable log) { NSLog(@"%@",log);};
         config.logNeedEncrypt = logNeedEncrypt; // 是否加密日志，默认加密。release 版本请设置为 YES
         [BDAutoTrack startTrackWithConfig:config];
+        
+        if ((NSString *)params[@"host"] != nil) {
+            host = (NSString *)params[@"host"];
+        }
+        
+        if ((NSString *)params[@"autoStart"] != nil) {
+            autoStartStr = (NSString *)params[@"autoStart"];
+            if([autoStartStr isEqual: @"false"]){
+                autoStart = NO;
+            } else {
+                autoStart = YES;
+            }
+        }
+        
+        // 设置回调url
+        if (host && host.length) {
+            [[BDAutoTrack sharedTrack] setRequestHostBlock:^NSString * _Nullable(BDAutoTrackServiceVendor  _Nonnull vendor, BDAutoTrackRequestURLType requestURLType) {
+                return host;
+            }];
+        }
+        
+        // 设置是否纪录，如果为false，请调用start，默认为true
+        if (autoStart) {
+            [[BDAutoTrack sharedTrack] startTrack];
+        }
     }
+}
+
+/**
+ 设置是否自启动，如果用户已经授权的情况下设为true，否则设为false
+ false的情况下必须在用户同意隐私弹窗后调用，否则不会存储和上报事件
+ */
+RCT_EXPORT_METHOD(start)
+{
+  [[BDAutoTrack sharedTrack] startTrack];
 }
 
 /**
@@ -199,6 +244,14 @@ RCT_EXPORT_METHOD(setUserUniqueId:(NSString *)userUniqueID resolver:(RCTPromiseR
 }
 
 /**
+ 清空UUID
+ */
+RCT_EXPORT_METHOD(clearUserUniqueId)
+{
+  [BDAutoTrack setCurrentUserUniqueID:nil];
+}
+
+/**
  获取全部的实验 id
  */
 RCT_REMAP_METHOD(getAbSdkVersion, getAbSdkVersionWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
@@ -223,6 +276,19 @@ RCT_REMAP_METHOD(getABTestConfigValueForKey, getABTestConfigValueForKey:(NSStrin
 {
   id ret = [BDAutoTrack ABTestConfigValueForKey:key defaultValue:defaultValue];
   resolve(ret);
+}
+
+/**
+ 获取ABTest相关配置
+ 返回ABTest的所有的Configs值
+ 此接口不会触发曝光，可以随意读取。
+ 如果正常为了做实验，请勿使用此接口，请使用-[BDAutoTrack ABTestConfigValueForKey:defaultValue:]接口
+ */
+RCT_REMAP_METHOD(getAllAbTestConfigs, getAllAbTestConfigsWithresolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    NSDictionary *result;
+    result = [[BDAutoTrack sharedTrack] allABTestConfigs];
+    resolve(result);
 }
 
 /**

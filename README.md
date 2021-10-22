@@ -4,9 +4,9 @@
 
 此仓库基于rangers_applog_reactnative_plugin
 
-Android SDK Version: 5.5.5
+Android SDK Version: 6.5.0
 
-iOS SDK Version: 5.6.4
+iOS SDK Version: 6.4.0
 
 ## 开始
 
@@ -24,7 +24,9 @@ iOS SDK Version: 5.6.4
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 ·······
 source 'https://github.com/CocoaPods/Specs.git'
+source 'https://github.com/volcengine/volcengine-specs.git'
 source 'https://github.com/bytedance/cocoapods_sdk_source_repo.git'
+
 
 ·······
 target
@@ -34,11 +36,26 @@ target
 
 ### Android
 
-1. 在 app module 的 build.gradle 并在 dependencies 中添加:
+1. 在 android 根目录 的 build.gradle 中添加:
 
 ```javascript
-// 在 dependencies 中添加
-implementation 'com.bytedance.applog:RangersAppLog-Lite-cn:5.5.5'
+buildscript {
+  repositories {
+    ...
+    maven {
+      url 'https://artifact.bytedance.com/repository/Volcengine/'
+    }
+  }
+}
+
+allprojects {
+  repositories {
+    ...
+    maven {
+      url 'https://artifact.bytedance.com/repository/Volcengine/'
+    }
+  }
+}
 
 ```
 
@@ -60,7 +77,6 @@ defaultConfig {
 | 接口名                     | 功能                              | 参数                                                        | 支持平台     |
 |----------------------------|-----------------------------------|-------------------------------------------------------------|--------------|
 | init | 初始化 | 参数：字典，不可空，参考index.js | iOS，Android |
-| setUserUniqueId            | 设置用户登录 Id                   | 参数1：string，可空。user_unique_id。                       | iOS, Android |
 | onEventV3                  | 生成自定义埋点                    | 参数1：string，非空。事件名。 参数2：字典，可空。事件参数。 | iOS, Android |
 
 ### 用户属性
@@ -89,13 +105,21 @@ defaultConfig {
 | getAllAbSdkVersion         | 获取全部客户端和服务端曝光参数（Android下目前只在获取与更新的时候才会有返回值，请做好app本地缓存） | 参数：无 返回：str                                          | iOS, Android          |
 | getABTestConfigValueForKey | 【异步】获取AB测试的配置，若不存在返回nil | 参数1: str, ABTest配置的key 返回：str或nil                  | iOS, Android          |
 | getABTestConfigValueForKeySync | 【同步】获取AB测试的配置，若不存在返回nil | 参数1: str, ABTest配置的key 返回：str或nil | iOS, Android |
+| getAllAbTestConfigs | 获取ABTest相关配置，此接口不会触发曝光，可以随意读取。如果正常为了做实验，请勿使用此接口，请使用getABTestConfigValueForKey、getABTestConfigValueForKeySync接口 | 参数: 无返回：object | iOS, Android |
+
+### 设备信息
+
+| 接口名            | 功能             | 参数                                | 支持平台     |
+| ----------------- | ---------------- | ----------------------------------- | ------------ |
+| setUserUniqueId   | 设置用户UUID     | 参数1：string，可空。user_unique_id | iOS, Android |
+| getUserUniqueID   | 获取绑定后的UUID | 参数：无 返回：str、null、undefined | iOS, Android |
+| clearUserUniqueId | 清除UUID         | 参数：无 返回：无                   | iOS, Android |
 
 ### 设备信息
 
 | 接口名                     | 功能                              | 参数                                                        | 支持平台     |
 |----------------------------|-----------------------------------|-------------------------------------------------------------|--------------|
 | getDeviceID                | 获取did                   | 参数：无 返回：str。                                        | iOS, Android          |
-| getUserUniqueID | 获取绑定后的uuid | 参数：无 返回：str、null、undefined | iOS, Android |
 | getSsid | 获取ssid | 参数：无 返回：str、null、undefined | iOS, Android |
 
 

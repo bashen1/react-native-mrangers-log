@@ -19,9 +19,13 @@ Pod::Spec.new do |s|
 
   s.dependency "React-Core"
 
-  s.subspec "Core" do |a|
-    a.dependency "RangersAppLog/Core", "5.6.4"
-    a.dependency "RangersAppLog/Host/CN", "5.6.4"
-    a.dependency "RangersAppLog/Log", "5.6.4"
+  s.subspec "RangersAppLog" do |a|
+    a.dependency "RangersAppLog/Host/CN", '6.4.0'
+    a.dependency "RangersAppLog/Core", '6.4.0'
+    # a.dependency "RangersAppLog/Unique", '6.4.0' # 采集IDFA，如果不希望读取IDFA，可不集成
+    a.dependency "RangersAppLog/Log", '6.4.0'
+    # a.dependency "RangersAppLog/UITracker", '6.4.0' # ⽆埋点日志采集SDK，用于无埋点事件采集
+    # a.dependency "RangersAppLog/Picker", '6.4.0' # 圈选SDK，用于无埋点事件圈选
+    a.dependency "RangersAppLog/OneKit", '6.4.0'
   end
 end

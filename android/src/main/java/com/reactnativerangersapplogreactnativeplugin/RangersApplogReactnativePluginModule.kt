@@ -1,10 +1,12 @@
 package com.reactnativerangersapplogreactnativeplugin
 
+import android.text.TextUtils
 import android.util.Log
 import com.bytedance.applog.AppLog
 import com.bytedance.applog.IDataObserver
 import com.bytedance.applog.ILogger
 import com.bytedance.applog.InitConfig
+import com.bytedance.applog.UriConfig
 import com.bytedance.applog.util.UriConstants
 import com.facebook.react.bridge.*
 import org.json.JSONException
@@ -30,6 +32,9 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
             var showDebugLogStr = "false"
             var logNeedEncrypt = true
             var logNeedEncryptStr = "true"
+            var host = "";
+            var autoStart = true;
+            var autoStartStr = "true";
 
             if (params.getString("appId") != null) {
                 appId = params.getString("appId")!!
@@ -54,6 +59,15 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
                 logNeedEncrypt = logNeedEncryptStr == "true"
             }
 
+            if (params.getString("host") != null) {
+                host = params.getString("host")!!
+            }
+
+            if (params.getString("autoStart") != null) {
+                autoStartStr = params.getString("autoStart")!!
+                autoStart = autoStartStr != "false"
+            }
+
             if (appId != "") {
                 val config = InitConfig(appId, channel) // appid和渠道，appid如不清楚请联系客户成功经理
                 //上报域名只支持中国
@@ -66,8 +80,7 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
                 config.isAbEnable = abEnable;
                 // 加密开关，SDK 5.5.1 及以上版本支持，false 为关闭加密，上线前建议设置为 true
                 AppLog.setEncryptAndCompress(logNeedEncrypt)
-                config.setAutoStart(true)
-                AppLog.init(reactApplicationContext, config)
+                config.setAutoStart(autoStart)
                 AppLog.addDataObserver(object : IDataObserver {
                     override fun onIdLoaded(s: String, s1: String, s2: String) {}
                     override fun onRemoteIdGet(b: Boolean, s: String, s1: String, s2: String, s3: String, s4: String, s5: String) {}
@@ -78,10 +91,21 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
 
                     override fun onAbVidsChange(s: String, s1: String) {}
                 })
+                if (!TextUtils.isEmpty(host)) {
+                    config.setUriConfig(UriConfig.createByDomain(host, null))
+                }
+                
+                AppLog.init(reactApplicationContext, config)
+                
             }
         } catch (e: JSONException) {
             e.printStackTrace()
         }
+    }
+
+    @ReactMethod
+    fun start(promise: Promise) {
+        AppLog.start()
     }
 
     @ReactMethod
@@ -139,6 +163,11 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
     }
 
     @ReactMethod
+    fun clearUserUniqueId() {
+        AppLog.setUserUniqueID(null); 
+    }
+
+    @ReactMethod
     fun getAbSdkVersion(promise: Promise) {
         promise.resolve(AppLog.getAbSdkVersion())
     }
@@ -156,6 +185,11 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
     @ReactMethod(isBlockingSynchronousMethod = true)
     fun getABTestConfigValueForKeySync(key: String, defaultValue: String?): String? {
         return AppLog.getAbConfig(key, defaultValue)
+    }
+
+    @ReactMethod
+    fun getAllAbTestConfigs(promise: Promise) {
+      promise.resolve(AppLog.getAllAbTestConfigs())
     }
 
     @ReactMethod
