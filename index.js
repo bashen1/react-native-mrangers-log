@@ -185,7 +185,24 @@ class RangersAppLog {
    * 如果正常为了做实验，请勿使用此接口，请使用getABTestConfigValueForKey、getABTestConfigValueForKeySync接口
    */
   static getAllAbTestConfigs = async () => {
-    return await RangersAppLogModule.getAllAbTestConfigs();
+    let res = {};
+    if (Platform.OS === 'ios') {
+      res = await RangersAppLogModule.getAllAbTestConfigs();
+    } else {
+      let resStr = await RangersAppLogModule.getAllAbTestConfigs();
+      if ((resStr ?? '') !== '' && (resStr ?? '') !== 'null') {
+        try {
+          let resObj = JSON.parse(resStr);
+          Object.keys(resObj).map(key => {
+            res = {
+              ...res,
+              [key]: resObj[key].val ?? ''
+            };
+          });
+        } catch (e){}
+      }
+    }
+    return res;
   }
 
   /**

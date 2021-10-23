@@ -81,6 +81,11 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
                 // 加密开关，SDK 5.5.1 及以上版本支持，false 为关闭加密，上线前建议设置为 true
                 AppLog.setEncryptAndCompress(logNeedEncrypt)
                 config.setAutoStart(autoStart)
+                if (!TextUtils.isEmpty(host)) {
+                    config.setUriConfig(UriConfig.createByDomain(host, null))
+                }
+
+                AppLog.init(reactApplicationContext, config)
                 AppLog.addDataObserver(object : IDataObserver {
                     override fun onIdLoaded(s: String, s1: String, s2: String) {}
                     override fun onRemoteIdGet(b: Boolean, s: String, s1: String, s2: String, s3: String, s4: String, s5: String) {}
@@ -91,12 +96,6 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
 
                     override fun onAbVidsChange(s: String, s1: String) {}
                 })
-                if (!TextUtils.isEmpty(host)) {
-                    config.setUriConfig(UriConfig.createByDomain(host, null))
-                }
-                
-                AppLog.init(reactApplicationContext, config)
-                
             }
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -189,7 +188,7 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
 
     @ReactMethod
     fun getAllAbTestConfigs(promise: Promise) {
-      promise.resolve(AppLog.getAllAbTestConfigs())
+      promise.resolve(AppLog.getAllAbTestConfigs().toString())
     }
 
     @ReactMethod
