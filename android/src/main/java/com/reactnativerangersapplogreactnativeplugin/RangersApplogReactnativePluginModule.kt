@@ -15,8 +15,6 @@ import java.util.*
 
 class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
-    private var allAbJSON: JSONObject? = null
-
     override fun getName(): String {
         return "RangersAppLogModule"
     }
@@ -86,16 +84,6 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
                 }
 
                 AppLog.init(reactApplicationContext, config)
-                AppLog.addDataObserver(object : IDataObserver {
-                    override fun onIdLoaded(s: String, s1: String, s2: String) {}
-                    override fun onRemoteIdGet(b: Boolean, s: String, s1: String, s2: String, s3: String, s4: String, s5: String) {}
-                    override fun onRemoteConfigGet(b: Boolean, jsonObject: JSONObject) {}
-                    override fun onRemoteAbConfigGet(b: Boolean, jsonObject: JSONObject) {
-                        allAbJSON = jsonObject
-                    }
-
-                    override fun onAbVidsChange(s: String, s1: String) {}
-                })
             }
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -169,11 +157,6 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
     @ReactMethod
     fun getAbSdkVersion(promise: Promise) {
         promise.resolve(AppLog.getAbSdkVersion())
-    }
-
-    @ReactMethod
-    fun getAllAbSdkVersion(promise: Promise) {
-        promise.resolve(allAbJSON.toString())
     }
 
     @ReactMethod

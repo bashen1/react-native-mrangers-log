@@ -102,7 +102,6 @@ defaultConfig {
 | 接口名                     | 功能                              | 参数                                                        | 支持平台     |
 |----------------------------|-----------------------------------|-------------------------------------------------------------|--------------|
 | getAbSdkVersion            | 获取全部客户端和服务端已曝光参数  | 参数：无 返回：str                                          | iOS, Android          |
-| getAllAbSdkVersion         | 获取全部客户端和服务端曝光参数（Android下目前只在获取与更新的时候才会有返回值，请做好app本地缓存） | 参数：无 返回：str                                          | iOS, Android          |
 | getABTestConfigValueForKey | 【异步】获取AB测试的配置，若不存在返回nil | 参数1: str, ABTest配置的key 返回：str或nil                  | iOS, Android          |
 | getABTestConfigValueForKeySync | 【同步】获取AB测试的配置，若不存在返回nil | 参数1: str, ABTest配置的key 返回：str或nil | iOS, Android |
 | getAllAbTestConfigs | 获取ABTest相关配置，此接口不会触发曝光，可以随意读取。如果正常为了做实验，请勿使用此接口，请使用getABTestConfigValueForKey、getABTestConfigValueForKeySync接口 | 参数: 无返回：object | iOS, Android |

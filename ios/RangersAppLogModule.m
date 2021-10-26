@@ -165,7 +165,7 @@ RCT_EXPORT_METHOD(start)
 RCT_EXPORT_METHOD(onEventV3:(NSString *)event params:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   RCTLogInfo(@"%s", __func__);
-  [BDAutoTrack eventV3:event params:params];
+  [[BDAutoTrack sharedTrack] eventV3:event params:params];
 }
 
 /**
@@ -176,7 +176,7 @@ RCT_EXPORT_METHOD(setHeaderInfo:(NSDictionary *)customHeader resolver:(RCTPromis
   for (NSString *key in customHeader) {
       if ([key isKindOfClass:NSString.class]) {
           NSObject *val = customHeader[key];
-          [BDAutoTrack setCustomHeaderValue:val forKey:key];
+          [[BDAutoTrack sharedTrack] setCustomHeaderValue:val forKey:key];
       }
   }
 }
@@ -186,7 +186,7 @@ RCT_EXPORT_METHOD(setHeaderInfo:(NSDictionary *)customHeader resolver:(RCTPromis
  */
 RCT_EXPORT_METHOD(removeHeaderInfo:(NSString *)customKey resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-  [BDAutoTrack removeCustomHeaderValueForKey: customKey];
+  [[BDAutoTrack sharedTrack] removeCustomHeaderValueForKey: customKey];
 }
 
 /**
@@ -195,7 +195,7 @@ RCT_EXPORT_METHOD(removeHeaderInfo:(NSString *)customKey resolver:(RCTPromiseRes
  */
 RCT_EXPORT_METHOD(profileSet:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [BDAutoTrack profileSet: params];
+    [[BDAutoTrack sharedTrack] profileSet: params];
 }
 
 /**
@@ -204,7 +204,7 @@ RCT_EXPORT_METHOD(profileSet:(NSDictionary *)params resolver:(RCTPromiseResolveB
  */
 RCT_EXPORT_METHOD(profileSetOnce:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [BDAutoTrack profileSetOnce: params];
+    [[BDAutoTrack sharedTrack] profileSetOnce: params];
 }
 
 /**
@@ -213,7 +213,7 @@ RCT_EXPORT_METHOD(profileSetOnce:(NSDictionary *)params resolver:(RCTPromiseReso
  */
 RCT_EXPORT_METHOD(profileIncrement:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [BDAutoTrack profileIncrement: params];
+    [[BDAutoTrack sharedTrack] profileIncrement: params];
 }
 
 /**
@@ -222,7 +222,7 @@ RCT_EXPORT_METHOD(profileIncrement:(NSDictionary *)params resolver:(RCTPromiseRe
  */
 RCT_EXPORT_METHOD(profileAppend:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [BDAutoTrack profileAppend: params];
+    [[BDAutoTrack sharedTrack] profileAppend: params];
 }
 
 /**
@@ -231,7 +231,7 @@ RCT_EXPORT_METHOD(profileAppend:(NSDictionary *)params resolver:(RCTPromiseResol
  */
 RCT_EXPORT_METHOD(profileUnset:(NSString *)customKey resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [BDAutoTrack profileUnset: customKey];
+    [[BDAutoTrack sharedTrack] profileUnset: customKey];
 }
 
 /**
@@ -239,8 +239,8 @@ RCT_EXPORT_METHOD(profileUnset:(NSString *)customKey resolver:(RCTPromiseResolve
  */
 RCT_EXPORT_METHOD(setUserUniqueId:(NSString *)userUniqueID resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-  [BDAutoTrack setCurrentUserUniqueID:userUniqueID];
-  resolve(userUniqueID);
+    [[BDAutoTrack sharedTrack] setCurrentUserUniqueID:userUniqueID];
+    resolve(userUniqueID);
 }
 
 /**
@@ -248,7 +248,7 @@ RCT_EXPORT_METHOD(setUserUniqueId:(NSString *)userUniqueID resolver:(RCTPromiseR
  */
 RCT_EXPORT_METHOD(clearUserUniqueId)
 {
-  [BDAutoTrack setCurrentUserUniqueID:nil];
+    [[BDAutoTrack sharedTrack] setCurrentUserUniqueID:nil];
 }
 
 /**
@@ -256,17 +256,8 @@ RCT_EXPORT_METHOD(clearUserUniqueId)
  */
 RCT_REMAP_METHOD(getAbSdkVersion, getAbSdkVersionWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-  NSString *allAbVids = [BDAutoTrack allAbVids];
-  resolve(allAbVids);
-}
-
-/**
- 获取全部的实验 id
- */
-RCT_REMAP_METHOD(getAllAbSdkVersion, getAllAbSdkVersionWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
-{
-  NSString *allAbVids = [BDAutoTrack allAbVids];
-  resolve(allAbVids);
+    NSString *allAbVids = [[BDAutoTrack sharedTrack] allAbVids];
+    resolve(allAbVids);
 }
 
 /**
@@ -274,7 +265,7 @@ RCT_REMAP_METHOD(getAllAbSdkVersion, getAllAbSdkVersionWithResolver:(RCTPromiseR
  */
 RCT_REMAP_METHOD(getABTestConfigValueForKey, getABTestConfigValueForKey:(NSString *)key defaultValue:(NSString *)defaultValue resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-  id ret = [BDAutoTrack ABTestConfigValueForKey:key defaultValue:defaultValue];
+  id ret = [[BDAutoTrack sharedTrack] ABTestConfigValueForKey:key defaultValue:defaultValue];
   resolve(ret);
 }
 
@@ -287,7 +278,7 @@ RCT_REMAP_METHOD(getABTestConfigValueForKey, getABTestConfigValueForKey:(NSStrin
 RCT_REMAP_METHOD(getAllAbTestConfigs, getAllAbTestConfigsWithresolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     NSDictionary *result;
-    result = [[BDAutoTrack sharedTrack] allABTestConfigs];
+    result = [[BDAutoTrack sharedTrack] performSelector:@selector(allABTestConfigs2)];
     resolve(result);
 }
 
@@ -295,7 +286,7 @@ RCT_REMAP_METHOD(getAllAbTestConfigs, getAllAbTestConfigsWithresolver:(RCTPromis
  获取实验参数（同步）
  */
 RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getABTestConfigValueForKeySync:(NSString *)key defaultValue:(NSString *)defaultValue) {
-    return [BDAutoTrack ABTestConfigValueForKey:key defaultValue:defaultValue];
+    return [[BDAutoTrack sharedTrack] ABTestConfigValueForKey:key defaultValue:defaultValue];
 }
 
 /**
@@ -304,7 +295,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getABTestConfigValueForKeySync:(NSString 
 RCT_REMAP_METHOD(getDeviceID, getDeviceIDWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   // RCTLogInfo(@"[Native]: %s", __func__);
-  NSString *did = [BDAutoTrack rangersDeviceID];
+  NSString *did = [[BDAutoTrack sharedTrack] rangersDeviceID];
   // RCTLogInfo(@"[Native]: %@", did);
   resolve(did);
 }
@@ -315,7 +306,7 @@ RCT_REMAP_METHOD(getDeviceID, getDeviceIDWithResolver:(RCTPromiseResolveBlock)re
 RCT_REMAP_METHOD(getUserUniqueID, getUserUniqueIDWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   // RCTLogInfo(@"[Native]: %s", __func__);
-  NSString *did = [BDAutoTrack userUniqueID];
+  NSString *did = [[BDAutoTrack sharedTrack] userUniqueID];
   // RCTLogInfo(@"[Native]: %@", did);
   resolve(did);
 }
@@ -326,7 +317,7 @@ RCT_REMAP_METHOD(getUserUniqueID, getUserUniqueIDWithResolver:(RCTPromiseResolve
 RCT_REMAP_METHOD(getSsid, getSsidWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   // RCTLogInfo(@"[Native]: %s", __func__);
-  NSString *did = [BDAutoTrack ssID];
+  NSString *did = [[BDAutoTrack sharedTrack] ssID];
   // RCTLogInfo(@"[Native]: %@", did);
   resolve(did);
 }

@@ -28,7 +28,7 @@ class RangersAppLog {
   }) => {
     (params.appId ?? '') !== '' && RangersAppLogModule.init(params);
   };
-  
+
   /**
    * 设置是否自启动，如果用户已经授权的情况下设为true，否则设为false
    * false的情况下必须在用户同意隐私弹窗后调用，否则不会存储和上报事件
@@ -128,35 +128,6 @@ class RangersAppLog {
   };
 
   /**
-   * 获取实验参数
-   * @returns {Promise<*>}
-   */
-  static getAllAbSdkVersion = async () => {
-    let res = '';
-    if (Platform.OS === 'ios') {
-      //ios 14320,14338
-      res = await RangersAppLogModule.getAllAbSdkVersion();
-    } else {
-      //android null或者{"name":{"val":"1","vid":"20511"},"ttttt":{"val":"aa","vid":"20670"}}
-      let resStr = await RangersAppLogModule.getAllAbSdkVersion();
-      if ((resStr ?? '') !== '' && (resStr ?? '') !== 'null') {
-        try {
-          let resObj = JSON.parse(resStr);
-          let vidArr = [];
-          Object.keys(resObj).map(key => {
-            if ((resObj?.[key]?.vid??'') !== '') {
-              vidArr.push(resObj?.[key]?.vid ?? '');
-            }
-          });
-          res = [...new Set(res)];
-          res = vidArr.join(',');
-        } catch (e){}
-      }
-    }
-    return res;
-  };
-
-  /**
    * 获取 AB 测试的配置（异步获取）
    * 第二个参数 "0" 为实验兜底值，建议和对照组 value 一致，在网络延迟或实验停止时返回此值
    */
@@ -192,13 +163,7 @@ class RangersAppLog {
       let resStr = await RangersAppLogModule.getAllAbTestConfigs();
       if ((resStr ?? '') !== '' && (resStr ?? '') !== 'null') {
         try {
-          let resObj = JSON.parse(resStr);
-          Object.keys(resObj).map(key => {
-            res = {
-              ...res,
-              [key]: resObj[key].val ?? ''
-            };
-          });
+          res = JSON.parse(resStr);
         } catch (e){}
       }
     }
