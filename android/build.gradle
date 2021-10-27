@@ -133,4 +133,5 @@ dependencies {
   api 'com.facebook.react:react-native:+'
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation 'com.bytedance.applog:RangersAppLog-All-cn:6.5.0'
+  implementation "com.bytedance.applog:RangersAppLog-All-scheme:6.5.0"
 }
