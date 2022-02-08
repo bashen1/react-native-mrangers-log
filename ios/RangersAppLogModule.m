@@ -2,6 +2,12 @@
 #import <React/RCTLog.h>
 #import <RangersAppLog/RangersAppLog.h>
 
+//发生于应用已安装情况下，用户点击ALink时
+#define ALINK_DATA_EVENT                   @"ALinkDataEvent"
+
+static NSDictionary *attributionData;
+static RCTBridge *bridgeCommon;
+
 @implementation RangersAppLogModule {
     NSString *appIdGlobal;
 }
@@ -12,6 +18,12 @@
 }
 + (BOOL) requiresMainQueueSetup {
     return YES;
+}
+
+//事件处理
+- (NSArray<NSString *> *)supportedEvents
+{
+    return @[ALINK_DATA_EVENT];
 }
 
 RCT_EXPORT_MODULE(RangersAppLogModule)
@@ -41,112 +53,14 @@ RCT_EXPORT_MODULE(RangersAppLogModule)
  params
  {
      appId
-     appName
-     channel
-     abEnable
-     showDebugLog
-     logNeedEncrypt
-     host
-     autoStart
  }
  */
 RCT_EXPORT_METHOD(init:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    NSString *appId = @"";
     appIdGlobal = @"";
-    NSString *appName = @"";
-    NSString *channel = @"App Store";
-    BOOL abEnable = YES;
-    NSString *abEnableStr = @"true";
-    BOOL showDebugLog = NO;
-    NSString *showDebugLogStr = @"false";
-    BOOL logNeedEncrypt = YES;
-    NSString *logNeedEncryptStr = @"true";
-    NSString *host = @"";
-    BOOL autoStart = YES;
-    NSString *autoStartStr = @"true";
-  
+    bridgeCommon = self.bridge;
     if ((NSString *)params[@"appId"] != nil) {
-        appId = (NSString *)params[@"appId"];
-        appIdGlobal = appId;
-    }
-    
-    if ((NSString *)params[@"appName"] != nil) {
-        appName = (NSString *)params[@"appName"];
-    }
-    
-    if ((NSString *)params[@"channel"] != nil) {
-        channel = (NSString *)params[@"channel"];
-    }
-    
-    if ((NSString *)params[@"abEnable"] != nil) {
-        abEnableStr = (NSString *)params[@"abEnable"];
-        if([abEnableStr isEqual: @"true"]){
-            abEnable = YES;
-        } else {
-            abEnable = NO;
-        }
-    }
-    
-    if ((NSString *)params[@"showDebugLog"] != nil) {
-        showDebugLogStr = (NSString *)params[@"showDebugLog"];
-        if([showDebugLogStr isEqual: @"true"]){
-            showDebugLog = YES;
-        } else {
-            showDebugLog = NO;
-        }
-    }
-    
-    if ((NSString *)params[@"logNeedEncrypt"] != nil) {
-        logNeedEncryptStr = (NSString *)params[@"logNeedEncrypt"];
-        if([logNeedEncryptStr isEqual: @"true"]){
-            logNeedEncrypt = YES;
-        } else {
-            logNeedEncrypt = NO;
-        }
-    }
-    
-    if (![appId isEqual: @""]) {
-        BDAutoTrackConfig *config;
-        if ([BDAutoTrackConfig respondsToSelector:@selector(configWithAppID:launchOptions:)]) {
-            config = [BDAutoTrackConfig configWithAppID:appId launchOptions:nil];
-        } else {
-            config = [BDAutoTrackConfig configWithAppID:appId];
-        }
-        /* 数据上报*/
-        config.serviceVendor = BDAutoTrackServiceVendorCN;
-        config.appName = appName; // 与您申请 APPID 时的 app_name 一致
-        config.channel = channel; // iOS 一般默认 App Store
-        config.abEnable = abEnable; //开启 ab 测试，默认为 YES
-        config.showDebugLog = showDebugLog; // 是否在控制台输出日志，仅调试使用。release 版本请 设置为 NO
-        config.logger = ^(NSString * _Nullable log) { NSLog(@"%@",log);};
-        config.logNeedEncrypt = logNeedEncrypt; // 是否加密日志，默认加密。release 版本请设置为 YES
-        [BDAutoTrack startTrackWithConfig:config];
-        
-        if ((NSString *)params[@"host"] != nil) {
-            host = (NSString *)params[@"host"];
-        }
-        
-        if ((NSString *)params[@"autoStart"] != nil) {
-            autoStartStr = (NSString *)params[@"autoStart"];
-            if([autoStartStr isEqual: @"false"]){
-                autoStart = NO;
-            } else {
-                autoStart = YES;
-            }
-        }
-        
-        // 设置回调url
-        if (host && host.length) {
-            [[BDAutoTrack sharedTrack] setRequestHostBlock:^NSString * _Nullable(BDAutoTrackServiceVendor  _Nonnull vendor, BDAutoTrackRequestURLType requestURLType) {
-                return host;
-            }];
-        }
-        
-        // 设置是否纪录，如果为false，请调用start，默认为true
-        if (autoStart) {
-            [[BDAutoTrack sharedTrack] startTrack];
-        }
+        appIdGlobal = (NSString *)params[@"appId"];
     }
 }
 
@@ -322,6 +236,28 @@ RCT_REMAP_METHOD(getSsid, getSsidWithResolver:(RCTPromiseResolveBlock)resolve re
   resolve(did);
 }
 
+/**
+ 获取AttributionData
+ */
+RCT_REMAP_METHOD(getAttributionData, getAttributionDataWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    if (attributionData) {
+        resolve(attributionData);
+    } else {
+        resolve(nil);
+    }
+}
+
+/**
+ 把ALink url传给SDK
+ */
+RCT_EXPORT_METHOD(initALinkUrl: (NSString *)url)
+{
+    NSURL *URL = [NSURL URLWithString: url];
+    [BDAutoTrack continueALinkActivityWithURL: URL];
+}
+
+
 // Example method
 // See // https://reactnative.dev/docs/native-modules-ios
 RCT_REMAP_METHOD(multiply,
@@ -332,6 +268,44 @@ RCT_REMAP_METHOD(multiply,
   NSNumber *result = @([a floatValue] * [b floatValue]);
 
   resolve(result);
+}
+
++ (void) initializeSDK:(id<BDAutoTrackAlinkRouting>)aLinkRoutingDelegate launchOptions:(NSDictionary *)launchOptions appId:(NSString *)appId appName:(NSString *)appName channel:(NSString *)channel {
+    BDAutoTrackConfig *config = [BDAutoTrackConfig configWithAppID:appId launchOptions:launchOptions];
+    config.serviceVendor = BDAutoTrackServiceVendorCN; //数据上报
+    config.appName = appName;  // 与您申请APPID时的app_name一致
+    config.channel = channel; // iOS一般默认App Store
+    config.abEnable = YES; //开启ab测试，默认为YES
+    config.enableDeferredALink = YES; // 是否开启ALink的延迟场景,默认关闭
+    
+    config.logNeedEncrypt = YES; // 是否加密日志，默认加密。release版本请设置为 YES
+    config.showDebugLog = NO; // 是否在控制台输出日志，仅调试使用，需要同时设置logger。release版本请设置为 NO
+    // config.logger = ^(NSString * _Nullable log) {NSLog(@"%@",log);}; //如果 showDebugLog设置为 YES 请打开这里的注释
+    
+    [BDAutoTrack startTrackWithConfig: config]; //初始化
+    [BDAutoTrack setALinkRoutingDelegate: aLinkRoutingDelegate]; // 调用顺序需要在初始化之后
+    [BDAutoTrack startTrack]; // 开始记录，注释掉也可以在模块中start开启【隐私合规之后】
+}
+
+/// Deferred deep link callback 根据回调返回的路由信息路由页面
+/// 发生于应用首启时（包括卸载重装）
+/// @param routingInfo 路由信息
++ (void)onAttributionData:(nullable NSDictionary *)routingInfo error:(nullable NSError *)error {
+    if (!error && routingInfo) {
+        attributionData = routingInfo;
+    }
+}
+
+/// Deep link callback 根据回调返回的路由信息路由页面
+/// 发生于应用已安装情况下，用户点击ALink时
+/// @param routingInfo 路由信息
++ (void)onALinkData:(nullable NSDictionary *)routingInfo error:(nullable NSError *)error {
+    if (!error && routingInfo) {
+        [bridgeCommon enqueueJSCall:@"RCTDeviceEventEmitter"
+                            method:@"emit"
+                              args:@[ALINK_DATA_EVENT, routingInfo]
+                        completion:NULL];
+    }
 }
 
 @end

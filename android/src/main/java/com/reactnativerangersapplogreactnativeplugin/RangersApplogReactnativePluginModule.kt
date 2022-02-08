@@ -1,14 +1,11 @@
 package com.reactnativerangersapplogreactnativeplugin
 
-import android.text.TextUtils
-import android.util.Log
+import android.app.Application
+import android.net.Uri
+import androidx.annotation.Nullable
 import com.bytedance.applog.AppLog
-import com.bytedance.applog.IDataObserver
-import com.bytedance.applog.ILogger
-import com.bytedance.applog.InitConfig
-import com.bytedance.applog.UriConfig
-import com.bytedance.applog.util.UriConstants
 import com.facebook.react.bridge.*
+import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
@@ -21,73 +18,11 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
 
     @ReactMethod
     fun init(params: ReadableMap, promise: Promise) {
-        try {
-            var appId = ""
-            var channel = "Android"
-            var abEnable = true
-            var abEnableStr = "true"
-            var showDebugLog = false
-            var showDebugLogStr = "false"
-            var logNeedEncrypt = true
-            var logNeedEncryptStr = "true"
-            var host = "";
-            var autoStart = true;
-            var autoStartStr = "true";
-
-            if (params.getString("appId") != null) {
-                appId = params.getString("appId")!!
-            }
-
-            if (params.getString("channel") != null) {
-                channel = params.getString("channel")!!
-            }
-
-            if (params.getString("abEnable") != null) {
-                abEnableStr = params.getString("abEnable")!!
-                abEnable = abEnableStr == "true"
-            }
-
-            if (params.getString("showDebugLog") != null) {
-                showDebugLogStr = params.getString("showDebugLog")!!
-                showDebugLog = showDebugLogStr == "true"
-            }
-
-            if (params.getString("logNeedEncrypt") != null) {
-                logNeedEncryptStr = params.getString("logNeedEncrypt")!!
-                logNeedEncrypt = logNeedEncryptStr == "true"
-            }
-
-            if (params.getString("host") != null) {
-                host = params.getString("host")!!
-            }
-
-            if (params.getString("autoStart") != null) {
-                autoStartStr = params.getString("autoStart")!!
-                autoStart = autoStartStr != "false"
-            }
-
-            if (appId != "") {
-                val config = InitConfig(appId, channel) // appid和渠道，appid如不清楚请联系客户成功经理
-                //上报域名只支持中国
-                config.setUriConfig(UriConstants.DEFAULT)
-                /// 是否在控制台输出日志，可用于观察用户行为日志上报情况
-                if (showDebugLog) {
-                    config.logger = ILogger { s, throwable -> Log.d("AppLog: ", "" + s) }
-                }
-                // 开启AB测试
-                config.isAbEnable = abEnable;
-                // 加密开关，SDK 5.5.1 及以上版本支持，false 为关闭加密，上线前建议设置为 true
-                AppLog.setEncryptAndCompress(logNeedEncrypt)
-                config.setAutoStart(autoStart)
-                if (!TextUtils.isEmpty(host)) {
-                    config.setUriConfig(UriConfig.createByDomain(host, null))
-                }
-
-                AppLog.init(reactApplicationContext, config)
-            }
-        } catch (e: JSONException) {
-            e.printStackTrace()
+        var appId = ""
+        if (params.hasKey("appId")) {
+            appId = params.getString("appId")!!
         }
+        applicationContext = reactApplicationContext
     }
 
     @ReactMethod
@@ -116,7 +51,7 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
 
     @ReactMethod
     fun removeHeaderInfo(customKey: String, promise: Promise) {
-        AppLog.removeHeaderInfo(customKey);
+        AppLog.removeHeaderInfo(customKey)
     }
 
     @ReactMethod
@@ -151,7 +86,7 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
 
     @ReactMethod
     fun clearUserUniqueId() {
-        AppLog.setUserUniqueID(null); 
+        AppLog.setUserUniqueID(null)
     }
 
     @ReactMethod
@@ -171,7 +106,7 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
 
     @ReactMethod
     fun getAllAbTestConfigs(promise: Promise) {
-      promise.resolve(AppLog.getAllAbTestConfigs().toString())
+        promise.resolve(AppLog.getAllAbTestConfigs().toString())
     }
 
     @ReactMethod
@@ -187,5 +122,56 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
     @ReactMethod
     fun getSsid(promise: Promise) {
         promise.resolve(AppLog.getSsid())
+    }
+
+    @ReactMethod
+    fun getAttributionData(promise: Promise) {
+        if (attributionData != null) {
+            val params = Arguments.createMap()
+            for ((key, value) in attributionData!!) {
+                params.putString(key, value)
+            }
+            promise.resolve(params)
+        } else {
+            promise.resolve(null)
+        }
+    }
+
+    @ReactMethod
+    fun initALinkUrl(url: String) {
+        var appLinkData = Uri.parse(url)
+        if (url == "") {
+            appLinkData = null
+        }
+        AppLog.activateALink(appLinkData)
+    }
+
+    companion object {
+        var attributionData: Map<String, String?>? = null
+        var applicationContext: ReactApplicationContext? = null
+
+        @JvmStatic
+        fun initializeSDK(application: Application, appId: String, channel: String) {
+            RangerApplog.initializeRangerApplog(application, appId, channel)
+        }
+
+        @JvmStatic
+        fun onAttributionData(@Nullable routingInfo: Map<String, String?>?, @Nullable exception: Exception?) {
+            if (routingInfo !== null) {
+                attributionData = routingInfo
+            }
+        }
+
+        @JvmStatic
+        fun onALinkData(@Nullable routingInfo: Map<String, String?>?, @Nullable exception: Exception?) {
+            if (routingInfo !== null) {
+                val params = Arguments.createMap()
+                for ((key, value) in routingInfo) {
+                    params.putString(key, value)
+                }
+
+                applicationContext?.getJSModule(RCTDeviceEventEmitter::class.java)?.emit("ALinkDataEvent", params)
+            }
+        }
     }
 }

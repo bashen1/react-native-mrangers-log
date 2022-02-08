@@ -1,5 +1,8 @@
-import {NativeModules, Platform} from 'react-native';
+import {DeviceEventEmitter, NativeModules, Platform} from 'react-native';
 const {RangersAppLogModule} = NativeModules;
+
+const AttributionDataEvent = 'AttributionDataEvent'; // 发生于应用首启时（包括卸载重装）
+const ALinkDataEvent = 'ALinkDataEvent'; // 发生于应用已安装情况下，用户点击ALink时
 
 class RangersAppLog {
   /**
@@ -7,24 +10,10 @@ class RangersAppLog {
    * @param params
    * {
    *     appId: String,
-   *     appName: String,
-   *     channel: String,
-   *     abEnable: String(true/false),
-   *     showDebugLog: String(true/false),
-   *     logNeedEncrypt: String(true/false),
-   *     autoStart: String(true/false),
-   *     host: String
    * }
    */
   static init = (params = {
     appId: '',
-    appName: '',
-    channel: '',
-    abEnable: 'true',
-    showDebugLog: 'false',
-    logNeedEncrypt: 'true',
-    autoStart: 'true',
-    host: ''
   }) => {
     (params.appId ?? '') !== '' && RangersAppLogModule.init(params);
   };
@@ -193,6 +182,34 @@ class RangersAppLog {
   static getSsid = async () => {
     return await RangersAppLogModule.getSsid();
   };
+
+  /**
+   * 获取AttributionData数据
+   * 发生于应用首启时（包括卸载重装）
+   * @returns {Promise<*>}
+   */
+  static getAttributionData = async () => {
+    return await RangersAppLogModule.getAttributionData();
+  }
+
+  /**
+   * 设置ALinkDataEvent监听
+   * 发生于应用已安装情况下，用户点击ALink时
+   * @param callback
+   */
+  static addALinkDataListener = (callback) => {
+    DeviceEventEmitter.addListener(ALinkDataEvent, message => {
+      callback(message)
+    });
+  }
+
+  /**
+   * 启动的Uri
+   * @param url
+   */
+  static initALinkUrl = (url='') => {
+    RangersAppLogModule.initALinkUrl(url);
+  }
 }
 
 export default RangersAppLog;
