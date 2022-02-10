@@ -4,6 +4,8 @@
 
 //发生于应用已安装情况下，用户点击ALink时
 #define ALINK_DATA_EVENT                   @"ALinkDataEvent"
+//发生于应用首次启动（卸载重装也算）
+#define ATTRIBUTION_DATA_EVENT             @"AttributionDataEvent"
 
 static NSDictionary *attributionData;
 static RCTBridge *bridgeCommon;
@@ -70,7 +72,8 @@ RCT_EXPORT_METHOD(init:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)r
  */
 RCT_EXPORT_METHOD(start)
 {
-  [[BDAutoTrack sharedTrack] startTrack];
+  // [[BDAutoTrack sharedTrack] startTrack];
+    [BDAutoTrack startTrack];
 }
 
 /**
@@ -284,15 +287,20 @@ RCT_REMAP_METHOD(multiply,
     
     [BDAutoTrack startTrackWithConfig: config]; //初始化
     [BDAutoTrack setALinkRoutingDelegate: aLinkRoutingDelegate]; // 调用顺序需要在初始化之后
-    [BDAutoTrack startTrack]; // 开始记录，注释掉也可以在模块中start开启【隐私合规之后】
+    // [BDAutoTrack startTrack]; // 开始记录，注释掉也可以在模块中start开启【隐私合规之后】
 }
 
 /// Deferred deep link callback 根据回调返回的路由信息路由页面
 /// 发生于应用首启时（包括卸载重装）
+/// 目前这个与Android的触发时机不同，Android需要start后才归因，iOS是直接启动归因，所以在bundle未载入的时候，已经发送事件，但是js端未触发
 /// @param routingInfo 路由信息
 + (void)onAttributionData:(nullable NSDictionary *)routingInfo error:(nullable NSError *)error {
     if (!error && routingInfo) {
         attributionData = routingInfo;
+        [bridgeCommon enqueueJSCall:@"RCTDeviceEventEmitter"
+                            method:@"emit"
+                              args:@[ATTRIBUTION_DATA_EVENT, routingInfo]
+                        completion:NULL];
     }
 }
 

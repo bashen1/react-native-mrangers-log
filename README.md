@@ -180,8 +180,8 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
  ...
    @Override
    public void onCreate() {
-    // 如果需要测试alink的延迟深度链接，需要改渠道或者版本号
-   	RangersApplogReactnativePluginModule.initializeSDK(this, "appId", "channel");
+    // 如果需要测试alink的延迟深度链接，需要改渠道或者版本号，120为重试的次数，500ms一次，火山默认为10
+   	RangersApplogReactnativePluginModule.initializeSDK(this, "appId", "channel", 120);
    }
  ...
 }
@@ -197,6 +197,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
 |----------------------------|-----------------------------------|-------------------------------------------------------------|--------------|
 | init | 初始化 | 参数：字典，不可空，参考index.js | iOS，Android |
 | onEvent                  | 生成自定义埋点                    | 参数1：string，非空。事件名。 参数2：字典，可空。事件参数。 | iOS, Android |
+| start                  | init 之后需要调用start，为了隐私合规                    | 无 | iOS, Android |
 
 ### 用户属性
 
@@ -241,11 +242,14 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
 
 ### ALink
 
-| 接口名               | 功能                                                         | 参数                                     | 支持平台     |
-| -------------------- | ------------------------------------------------------------ | ---------------------------------------- | ------------ |
-| getAttributionData   | 获取延迟深度链接的归因数据                                   | 参数：无 返回：object、null、undefined。 | iOS, Android |
-| addALinkDataListener | 添加深度链接唤醒监听，需要配合RN的Link与模块的initALinkUrl   | 参数：function(ret){}                    | iOS, Android |
-| initALinkUrl         | 深度链接，此方法符合条件会触发addALinkDataListener，需配合RN的Link | 参数：字符串                             | iOS, Android |
+| 接口名                     | 功能                                                         | 参数                                     | 支持平台     |
+| -------------------------- | ------------------------------------------------------------ | ---------------------------------------- | ------------ |
+| getAttributionData         | 获取延迟深度链接的归因数据                                   | 参数：无 返回：object、null、undefined。 | iOS, Android |
+| addALinkDataListener       | 添加深度链接唤醒监听，需要配合RN的Link与模块的initALinkUrl   | 参数：function(ret){}                    | iOS, Android |
+| addAttributionDataListener | 添加首次启动归因监听                                         | 参数：function(ret){}                    | iOS, Android |
+| initALinkUrl               | 深度链接，此方法符合条件会触发addALinkDataListener，需配合RN的Link | 参数：字符串                             | iOS, Android |
+
+ALink接口的调用顺序为先添加监听，再调用模块的start方法
 
 ## License
 

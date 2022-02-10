@@ -151,14 +151,19 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
         var applicationContext: ReactApplicationContext? = null
 
         @JvmStatic
-        fun initializeSDK(application: Application, appId: String, channel: String) {
-            RangerApplog.initializeRangerApplog(application, appId, channel)
+        fun initializeSDK(application: Application, appId: String, channel: String, deferDeepLinkRetryCount: Int) {
+            RangerApplog.initializeRangerApplog(application, appId, channel, deferDeepLinkRetryCount)
         }
 
         @JvmStatic
         fun onAttributionData(@Nullable routingInfo: Map<String, String?>?, @Nullable exception: Exception?) {
             if (routingInfo !== null) {
+                val params = Arguments.createMap()
+                for ((key, value) in routingInfo) {
+                    params.putString(key, value)
+                }
                 attributionData = routingInfo
+                applicationContext?.getJSModule(RCTDeviceEventEmitter::class.java)?.emit("AttributionDataEvent", params)
             }
         }
 
