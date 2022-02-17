@@ -198,12 +198,11 @@ class RangersAppLog {
    * @param callback
    */
    static addAttributionDataListener = async (callback) => {
-    if (Platform.OS === 'ios') {
-      // iOS由于不需要start就触发归因发送了事件，然而这时bundle并未载入，也就是存在回调（数据）优先于载入
-      // 所以用getAttributionData直接进行数据返回
-      let attributionData = await RangersAppLog.getAttributionData();
-      callback(attributionData);
-    }
+    // iOS由于不需要start就触发归因发送了事件，然而这时bundle并未载入，也就是存在回调（数据）优先于载入
+    // 所以用getAttributionData直接进行数据返回
+    // 为了平台一致性，Android与iOS做统一
+    let attributionData = await RangersAppLog.getAttributionData();
+    callback(attributionData);
     DeviceEventEmitter.addListener(AttributionDataEvent, message => {
       callback(message)
     });

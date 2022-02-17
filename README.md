@@ -16,13 +16,13 @@ iOS SDK Version: 6.6.0
 
 >在使用 RangersAppLog SDK 前，你需要先[注册DataRangers账号](https://datarangers.com.cn/help/doc?lid=1867&did=40001)并且创建一个应用。
 
-
 ## 插件安装与初始化
 
 ### iOS
 
 1. 打开`ios/Podfile`文件，添加以下
-```
+
+```pod
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 ·······
 source 'https://github.com/CocoaPods/Specs.git'
@@ -35,7 +35,7 @@ target
 ```
 
 2. 添加 rangersapplog.XXXXXXX 的UrlScheme，`注意替换XXXXXXX为自己的`
-2. 添加Universal Link，注意替换xxx为自己的
+3. 添加Universal Link，注意替换xxx为自己的
 
 ```xml
 <string>applinks:xxx.volctracer.com</string>
@@ -123,8 +123,8 @@ allprojects {
 
 ```javascript
 defaultConfig {
-	...
-	manifestPlaceholders.put("APPLOG_SCHEME", "rangersapplog.XXXXXXXXX".toLowerCase())
+  ...
+  manifestPlaceholders.put("APPLOG_SCHEME", "rangersapplog.XXXXXXXXX".toLowerCase())
 }
 
 ```
@@ -147,22 +147,22 @@ defaultConfig {
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
             .......
-          	<!--添加下面-->
+            <!--添加下面-->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
               
-              	<!-- XXXXX.volctracer.com 此处的网址为ALink后台的链接-->
+                <!-- XXXXX.volctracer.com 此处的网址为ALink后台的链接-->
                 <data
                     android:scheme="https"
                     android:host="XXXXX.volctracer.com"
                     android:pathPrefix="/a" />
             </intent-filter>
-          	<!--添加上面-->
+            <!--添加上面-->
         </activity>
-      	.......
+        .......
     </application>
 
 </manifest>
@@ -181,13 +181,11 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
    @Override
    public void onCreate() {
     // 如果需要测试alink的延迟深度链接，需要改渠道或者版本号，120为重试的次数，500ms一次，火山默认为10
-   	RangersApplogReactnativePluginModule.initializeSDK(this, "appId", "channel", 120);
+    RangersApplogReactnativePluginModule.initializeSDK(this, "appId", "channel", 120);
    }
  ...
 }
 ```
-
-
 
 ## 插件接口文档
 
@@ -204,17 +202,17 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
 | 接口名                     | 功能                              | 参数                                                        | 支持平台     |
 |----------------------------|-----------------------------------|-------------------------------------------------------------|--------------|
 | profileSet              | 设置用户属性，存在则覆盖，不存在则创建 | 参数：字典，不可空。                       | iOS, Android |
-| profileSetOnce           | 设置用户属性，存在则不设置，不存在则创建，适合首次相关的用户属性，比如首次访问时间等			  | 参数：字典，不可空。                      | iOS, Android |
+| profileSetOnce           | 设置用户属性，存在则不设置，不存在则创建，适合首次相关的用户属性，比如首次访问时间等     | 参数：字典，不可空。                      | iOS, Android |
 | profileIncrement              | 设置数值类型的属性，可进行累加 | 参数：字典，不可空。                       | iOS, Android |
-| profileAppend           | 向用户的某个 List 类型的属性添加属性，比如爱好			  | 参数：字典，不可空。                     | iOS, Android |
-| profileUnset           | 删除用户的属性			  | 参数：字符串，不可空                      | iOS, Android |
+| profileAppend           | 向用户的某个 List 类型的属性添加属性，比如爱好  | 参数：字典，不可空。                     | iOS, Android |
+| profileUnset           | 删除用户的属性  | 参数：字符串，不可空                      | iOS, Android |
 
 ### 事件公共属性
 
 | 接口名                     | 功能                              | 参数                                                        | 支持平台     |
 |----------------------------|-----------------------------------|-------------------------------------------------------------|--------------|
 | setHeaderInfo              | 自定义header信息 设置用户公共属性 | 参数1：字典，可空。自定义header信息。                       | iOS, Android |
-| removeHeaderInfo           | 移除自定义事件公共属性			  | 参数：字符串，不可空                      | iOS, Android |
+| removeHeaderInfo           | 移除自定义事件公共属性  | 参数：字符串，不可空                      | iOS, Android |
 
 ### A/B测试
 
@@ -225,7 +223,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
 | getABTestConfigValueForKeySync | 【同步】获取AB测试的配置，若不存在返回nil | 参数1: str, ABTest配置的key 返回：str或nil | iOS, Android |
 | getAllAbTestConfigs | 获取ABTest相关配置，此接口不会触发曝光，可以随意读取。如果正常为了做实验，请勿使用此接口，请使用getABTestConfigValueForKey、getABTestConfigValueForKeySync接口 | 参数: 无返回：object | iOS, Android |
 
-### 设备信息
+### 用户信息
 
 | 接口名            | 功能             | 参数                                | 支持平台     |
 | ----------------- | ---------------- | ----------------------------------- | ------------ |
