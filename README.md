@@ -196,6 +196,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
 | init | 初始化 | 参数：字典，不可空，参考index.js | iOS，Android |
 | onEvent                  | 生成自定义埋点                    | 参数1：string，非空。事件名。 参数2：字典，可空。事件参数。 | iOS, Android |
 | start                  | init 之后需要调用start，为了隐私合规                    | 无 | iOS, Android |
+| flush                  | 主动触发上报。SDK有频率限制，每10s最多可以触发一次                    | 无 | iOS, Android |
 
 ### 用户属性
 

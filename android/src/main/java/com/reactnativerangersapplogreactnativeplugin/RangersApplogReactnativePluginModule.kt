@@ -45,6 +45,11 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
     }
 
     @ReactMethod
+    fun flush(promise: Promise) {
+        AppLog.flush()
+    }
+
+    @ReactMethod
     fun setHeaderInfo(headerInfo: ReadableMap, promise: Promise) {
         AppLog.setHeaderInfo(headerInfo.toHashMap())
     }

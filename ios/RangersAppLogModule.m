@@ -86,6 +86,14 @@ RCT_EXPORT_METHOD(onEventV3:(NSString *)event params:(NSDictionary *)params reso
 }
 
 /**
+ * 主动触发上报。SDK有频率限制，每10s最多可以触发一次
+ */
+RCT_EXPORT_METHOD(flush)
+{
+  [BDAutoTrack flush];
+}
+
+/**
  设置事件公共属性
  */
 RCT_EXPORT_METHOD(setHeaderInfo:(NSDictionary *)customHeader resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)

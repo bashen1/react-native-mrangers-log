@@ -36,6 +36,13 @@ class RangersAppLog {
   };
 
   /**
+   * 主动触发上报。SDK有频率限制，每10s最多可以触发一次
+   */
+  static flush = () => {
+    RangersAppLogModule.flush();
+  };
+
+  /**
    * 设置事件公共属性
    * @param headerInfo
    */
