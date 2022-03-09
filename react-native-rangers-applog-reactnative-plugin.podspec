@@ -20,12 +20,12 @@ Pod::Spec.new do |s|
   s.dependency "React-Core"
 
   s.subspec "RangersAppLog" do |a|
-    a.dependency "RangersAppLog/Host/CN", '6.6.0'
-    a.dependency "RangersAppLog/Core", '6.6.0'
-    a.dependency "RangersAppLog/Unique", '6.6.0' # 采集IDFA，如果不希望读取IDFA，可不集成
-    a.dependency "RangersAppLog/Log", '6.6.0'
-    # a.dependency "RangersAppLog/UITracker", '6.6.0' # ⽆埋点日志采集SDK，用于无埋点事件采集
-    # a.dependency "RangersAppLog/Picker", '6.6.0' # 圈选SDK，用于无埋点事件圈选
-    a.dependency "RangersAppLog/OneKit", '6.6.0'
+    a.dependency "RangersAppLog/Host/CN", '6.6.0.1-bugfix'
+    a.dependency "RangersAppLog/Core", '6.6.0.1-bugfix'
+    a.dependency "RangersAppLog/Unique", '6.6.0.1-bugfix' # 采集IDFA，如果不希望读取IDFA，可不集成
+    a.dependency "RangersAppLog/Log", '6.6.0.1-bugfix'
+    # a.dependency "RangersAppLog/UITracker", '6.6.0.1-bugfix' # ⽆埋点日志采集SDK，用于无埋点事件采集
+    # a.dependency "RangersAppLog/Picker", '6.6.0.1-bugfix' # 圈选SDK，用于无埋点事件圈选
+    a.dependency "RangersAppLog/OneKit", '6.6.0.1-bugfix'
   end
 end

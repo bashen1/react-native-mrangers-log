@@ -8,7 +8,7 @@
 
 Android SDK Version: 6.7.4
 
-iOS SDK Version: 6.6.0
+iOS SDK Version: 6.6.0（6.6.0.1-bugfix）
 
 ## 开始
 
