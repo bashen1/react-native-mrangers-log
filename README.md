@@ -6,7 +6,7 @@
 
 `3.0.0 版本支持ALink，并且调整集成与初始化方式。最后一个老版本为2.2.1`
 
-Android SDK Version: 6.7.4
+Android SDK Version: 6.9.5
 
 iOS SDK Version: 6.6.0（6.6.0.1-bugfix）
 
@@ -104,7 +104,7 @@ buildscript {
   dependencies {
     ...
     // 头条火山
-    classpath 'com.bytedance.applog:RangersAppLog-All-plugin:6.7.4'
+    classpath 'com.bytedance.applog:RangersAppLog-All-plugin:6.9.5'
   }
 }
 
