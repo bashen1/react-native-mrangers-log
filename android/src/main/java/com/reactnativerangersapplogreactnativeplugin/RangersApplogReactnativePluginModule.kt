@@ -156,8 +156,26 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
         var applicationContext: ReactApplicationContext? = null
 
         @JvmStatic
-        fun initializeSDK(application: Application, appId: String, channel: String, deferDeepLinkRetryCount: Int) {
-            RangerApplog.initializeRangerApplog(application, appId, channel, deferDeepLinkRetryCount)
+        fun initializeSDK(
+                application: Application,
+                appId: String,
+                channel: String,
+                deferDeepLinkRetryCount: Int,
+                isMacEnable: Boolean,
+                isAndroidIdEnabled: Boolean,
+                isOaidEnabled: Boolean,
+                isLogEnable: Boolean
+        ) {
+            RangerApplog.initializeRangerApplog(
+                    application,
+                    appId,
+                    channel,
+                    deferDeepLinkRetryCount,
+                    isMacEnable,
+                    isAndroidIdEnabled,
+                    isOaidEnabled,
+                    isLogEnable
+            )
         }
 
         @JvmStatic
