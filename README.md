@@ -6,9 +6,9 @@
 
 `3.0.0 版本支持ALink，并且调整集成与初始化方式。最后一个老版本为2.2.1`
 
-Android SDK Version: 6.9.6
+Android SDK Version: 6.10.1
 
-iOS SDK Version: 6.9.0.1-bugfix
+iOS SDK Version: 6.10.2
 
 ## 开始
 
@@ -103,8 +103,8 @@ buildscript {
   }
   dependencies {
     ...
-    // 头条火山
-    classpath 'com.bytedance.applog:RangersAppLog-All-plugin:6.9.6'
+    // 头条火山，每次升级记得调整版本
+    classpath 'com.bytedance.applog:RangersAppLog-All-plugin:6.10.1'
   }
 }
 
@@ -126,6 +126,10 @@ defaultConfig {
   ...
   manifestPlaceholders.put("APPLOG_SCHEME", "rangersapplog.XXXXXXXXX".toLowerCase())
 }
+
+....
+
+apply plugin: 'com.bytedance.std.tracker'
 
 ```
 
@@ -180,8 +184,8 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
  ...
    @Override
    public void onCreate() {
-    // 如果需要测试alink的延迟深度链接，需要改渠道或者版本号，120为重试的次数，500ms一次，火山默认为10，隐私合规需要注意下方的Bool值
-    RangersApplogReactnativePluginModule.initializeSDK(this, "appId", "channel", 120, true, true, true, false);
+    // 如果需要测试alink的延迟深度链接，需要改渠道或者版本号，隐私合规需要注意下方的Bool值
+    RangersApplogReactnativePluginModule.initializeSDK(this, "appId", "channel", true, true, true, false);
    }
  ...
 }
