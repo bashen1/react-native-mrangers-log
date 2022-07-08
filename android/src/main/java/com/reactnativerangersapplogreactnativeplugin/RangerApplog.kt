@@ -13,7 +13,6 @@ object RangerApplog {
             application: Application?,
             appId: String?,
             channel: String?,
-            deferDeepLinkRetryCount: Int,
             isMacEnable: Boolean,
             isAndroidIdEnabled: Boolean,
             isOaidEnabled: Boolean,
@@ -33,7 +32,6 @@ object RangerApplog {
         config.setAutoStart(false) //初始化后立即上报【隐私合规】
         config.enableDeferredALink() //开启延迟深度链接
         config.isMacEnable = isMacEnable //是否要获取Mac地址【隐私合规】
-        config.deferDeepLinkRetryCount = deferDeepLinkRetryCount //延迟深度链接的超时重试次数，默认10次，重试间隔500ms
         config.isAndroidIdEnabled = isAndroidIdEnabled //是否要获取Android_id【隐私合规】
         config.isOaidEnabled = isOaidEnabled //是否要获取OAID【隐私合规】
         AppLog.setClipboardEnabled(true) // 用于广告监测中的裂变

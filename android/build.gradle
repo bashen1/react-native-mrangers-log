@@ -132,9 +132,9 @@ dependencies {
   // noinspection GradleDynamicVersion
   api 'com.facebook.react:react-native:+'
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation 'com.bytedance.applog:RangersAppLog-All-cn:6.9.6'
-  implementation "com.bytedance.applog:RangersAppLog-All-scheme:6.9.6"
+  implementation 'com.bytedance.applog:RangersAppLog-All-cn:6.10.1'
+  implementation "com.bytedance.applog:RangersAppLog-All-scheme:6.10.1"
   // 为使广告监测中的反作弊识别准确度更高，需引入下面的风控子库
   implementation 'com.volcengine:metasec_ml:4.3.4.2-bugfix'
-  implementation "com.bytedance.applog:RangersAppLog-All-metasec-cn:6.9.6"
+  implementation "com.bytedance.applog:RangersAppLog-All-metasec-cn:6.10.1"
 }
