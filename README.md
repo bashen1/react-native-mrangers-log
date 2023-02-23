@@ -234,6 +234,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
 | ----------------- | ---------------- | ----------------------------------- | ------------ |
 | setUserUniqueId   | 设置用户UUID     | 参数1：string，可空。user_unique_id | iOS, Android |
 | getUserUniqueID   | 获取绑定后的UUID | 参数：无 返回：str、null、undefined | iOS, Android |
+| getUserUniqueIDSync   | 获取绑定后的UUID | 参数：无 返回：str、null、undefined | iOS, Android |
 | clearUserUniqueId | 清除UUID         | 参数：无 返回：无                   | iOS, Android |
 
 ### 设备信息
@@ -242,6 +243,8 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
 |----------------------------|-----------------------------------|-------------------------------------------------------------|--------------|
 | getDeviceID                | 获取did                   | 参数：无 返回：str。                                        | iOS, Android          |
 | getSsid | 获取ssid | 参数：无 返回：str、null、undefined | iOS, Android |
+| getDeviceIDSync                | 获取did                   | 参数：无 返回：str。                                        | iOS, Android          |
+| getSsidSync | 获取ssid | 参数：无 返回：str、null、undefined | iOS, Android |
 
 ### ALink
 
