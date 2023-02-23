@@ -248,6 +248,36 @@ RCT_REMAP_METHOD(getSsid, getSsidWithResolver:(RCTPromiseResolveBlock)resolve re
 }
 
 /**
+ 获取设备ID（同步）
+ */
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getDeviceIDSync) {
+    // RCTLogInfo(@"[Native]: %s", __func__);
+  NSString *did = [[BDAutoTrack sharedTrack] rangersDeviceID];
+    // RCTLogInfo(@"[Native]: %@", did);
+  return did;
+}
+
+/**
+获取UUID（同步）
+*/
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getUserUniqueIDSync){
+   // RCTLogInfo(@"[Native]: %s", __func__);
+  NSString *did = [[BDAutoTrack sharedTrack] userUniqueID];
+   // RCTLogInfo(@"[Native]: %@", did);
+  return did;
+}
+
+/**
+获取SSID（同步）
+*/
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(getSsidSync){
+   // RCTLogInfo(@"[Native]: %s", __func__);
+  NSString *did = [[BDAutoTrack sharedTrack] ssID];
+  // RCTLogInfo(@"[Native]: %@", did);
+  return did;
+}
+
+/**
  获取AttributionData
  */
 RCT_REMAP_METHOD(getAttributionData, getAttributionDataWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)

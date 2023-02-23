@@ -129,6 +129,21 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
         promise.resolve(AppLog.getSsid())
     }
 
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    fun getDeviceIDSync():String? {
+        return AppLog.getDid()
+    }
+
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    fun getUserUniqueIDSync():String? {
+        return AppLog.getUserUniqueID()
+    }
+
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    fun getSsidSync():String? {
+        return AppLog.getSsid()
+    }
+
     @ReactMethod
     fun getAttributionData(promise: Promise) {
         if (attributionData != null) {

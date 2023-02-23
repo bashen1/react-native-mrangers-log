@@ -191,6 +191,30 @@ class RangersAppLog {
   };
 
   /**
+   * 获取did（同步）
+   * @returns {*}
+   */
+  static getDeviceIDSync = () => {
+    return RangersAppLogModule.getDeviceIDSync();
+  };
+
+  /**
+   * 获取UUID（同步）
+   * @returns {*}
+   */
+  static getUserUniqueIDSync = () => {
+    return RangersAppLogModule.getUserUniqueIDSync();
+  };
+
+  /**
+   * 获取SSID（同步）
+   * @returns {*}
+   */
+  static getSsidSync = () => {
+    return RangersAppLogModule.getSsidSync();
+  };
+
+  /**
    * 获取AttributionData数据
    * 发生于应用首启时（包括卸载重装）
    * @returns {Promise<*>}
