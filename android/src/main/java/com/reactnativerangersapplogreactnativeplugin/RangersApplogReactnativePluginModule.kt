@@ -4,11 +4,13 @@ import android.app.Application
 import android.net.Uri
 import androidx.annotation.Nullable
 import com.bytedance.applog.AppLog
-import com.facebook.react.bridge.*
+import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReactContextBaseJavaModule
+import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
-import org.json.JSONException
-import org.json.JSONObject
-import java.util.*
 
 class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
@@ -32,16 +34,7 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
 
     @ReactMethod
     fun onEventV3(event: String, params: ReadableMap, promise: Promise) {
-        try {
-            val hashMap: HashMap<String, Any> = params.toHashMap()
-            val jsonObject = JSONObject()
-            for (key in hashMap.keys) {
-                jsonObject.put(key, hashMap.get(key))
-            }
-            AppLog.onEventV3(event, jsonObject)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
+        AppLog.onEventV3(event, convertMapToJson(params))
     }
 
     @ReactMethod
