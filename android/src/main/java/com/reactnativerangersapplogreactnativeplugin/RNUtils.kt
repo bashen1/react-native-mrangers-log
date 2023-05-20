@@ -31,21 +31,27 @@ fun convertJsonToMap(jsonObject: JSONObject): WritableMap {
             is JSONObject -> {
                 map.putMap(key, convertJsonToMap(value))
             }
+
             is JSONArray -> {
                 map.putArray(key, convertJsonToArray(value))
             }
+
             is Boolean -> {
                 map.putBoolean(key, value)
             }
+
             is Int -> {
                 map.putInt(key, value)
             }
+
             is Double -> {
                 map.putDouble(key, value)
             }
+
             is String -> {
                 map.putString(key, value)
             }
+
             else -> {
                 map.putString(key, value.toString())
             }
@@ -68,21 +74,27 @@ fun convertJsonToArray(jsonArray: JSONArray): WritableArray {
             is JSONObject -> {
                 array.pushMap(convertJsonToMap(value))
             }
+
             is JSONArray -> {
                 array.pushArray(convertJsonToArray(value))
             }
+
             is Boolean -> {
                 array.pushBoolean(value)
             }
+
             is Int -> {
                 array.pushInt(value)
             }
+
             is Double -> {
                 array.pushDouble(value)
             }
+
             is String -> {
                 array.pushString(value)
             }
+
             else -> {
                 array.pushString(value.toString())
             }
@@ -98,21 +110,37 @@ fun convertJsonToArray(jsonArray: JSONArray): WritableArray {
  * @throws JSONException
  */
 @Throws(JSONException::class)
-fun convertMapToJson(readableMap: ReadableMap?): JSONObject {
-    val `object` = JSONObject()
-    val iterator = readableMap!!.keySetIterator()
+fun convertMapToJson(readableMap: ReadableMap?): JSONObject? {
+    val jsonObject = JSONObject()
+    if (readableMap == null) {
+        return null
+    }
+    val iterator = readableMap.keySetIterator()
+    if (!iterator.hasNextKey()) {
+        return null
+    }
     while (iterator.hasNextKey()) {
         val key = iterator.nextKey()
-        when (readableMap.getType(key)) {
-            ReadableType.Null -> `object`.put(key, JSONObject.NULL)
-            ReadableType.Boolean -> `object`.put(key, readableMap.getBoolean(key))
-            ReadableType.Number -> `object`.put(key, readableMap.getDouble(key))
-            ReadableType.String -> `object`.put(key, readableMap.getString(key))
-            ReadableType.Map -> `object`.put(key, convertMapToJson(readableMap.getMap(key)))
-            ReadableType.Array -> `object`.put(key, convertArrayToJson(readableMap.getArray(key)))
+        val readableType = readableMap.getType(key)
+        try {
+            when (readableType) {
+                ReadableType.Null -> jsonObject.put(key, null)
+                ReadableType.Boolean -> jsonObject.put(key, readableMap.getBoolean(key))
+                ReadableType.Number -> jsonObject.put(key, readableMap.getDouble(key))
+                ReadableType.String -> jsonObject.put(key, readableMap.getString(key))
+                ReadableType.Map -> jsonObject.put(key, convertMapToJson(readableMap.getMap(key)))
+                ReadableType.Array -> jsonObject.put(
+                    key,
+                    convertArrayToJson(readableMap.getArray(key))
+                )
+
+                else -> {
+                }
+            }
+        } catch (_: JSONException) {
         }
     }
-    return `object`
+    return jsonObject
 }
 
 /**
@@ -128,6 +156,7 @@ fun convertArrayToJson(readableArray: ReadableArray?): JSONArray {
         when (readableArray.getType(i)) {
             ReadableType.Null -> {
             }
+
             ReadableType.Boolean -> array.put(readableArray.getBoolean(i))
             ReadableType.Number -> array.put(readableArray.getDouble(i))
             ReadableType.String -> array.put(readableArray.getString(i))
@@ -155,7 +184,13 @@ fun convertReadableArrayToWritableArray(@Nullable readableArray: ReadableArray?)
             ReadableType.Number -> array.pushDouble(readableArray.getDouble(i))
             ReadableType.String -> array.pushString(readableArray.getString(i))
             ReadableType.Map -> array.pushMap(convertReadableMapToWritableMap(readableArray.getMap(i)))
-            ReadableType.Array -> array.pushArray(convertReadableArrayToWritableArray(readableArray.getArray(i)))
+            ReadableType.Array -> array.pushArray(
+                convertReadableArrayToWritableArray(
+                    readableArray.getArray(
+                        i
+                    )
+                )
+            )
         }
     }
     return array
@@ -179,8 +214,15 @@ fun convertReadableMapToWritableMap(@Nullable readableMap: ReadableMap?): Writab
             ReadableType.Boolean -> map.putBoolean(key, readableMap.getBoolean(key))
             ReadableType.String -> map.putString(key, readableMap.getString(key))
             ReadableType.Number -> map.putDouble(key, readableMap.getDouble(key))
-            ReadableType.Map -> map.putMap(key, convertReadableMapToWritableMap(readableMap.getMap(key)))
-            ReadableType.Array -> map.putArray(key, convertReadableArrayToWritableArray(readableMap.getArray(key)))
+            ReadableType.Map -> map.putMap(
+                key,
+                convertReadableMapToWritableMap(readableMap.getMap(key))
+            )
+
+            ReadableType.Array -> map.putArray(
+                key,
+                convertReadableArrayToWritableArray(readableMap.getArray(key))
+            )
         }
     }
     return map
