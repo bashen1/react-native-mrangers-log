@@ -46,6 +46,10 @@ object RangerApplog {
             override fun onAttributionData(routingInfo: Map<String, String?>?, exception: Exception?) {
                 RangersApplogReactnativePluginModule.onAttributionData(routingInfo, exception)
             }
+
+            override fun onAttributionFailedCallback(exception: Exception?) {
+//                TODO("Not yet implemented")
+            }
         })
         // AppLog.start() //开启上报【隐私合规】,需要调用模块的start的方法
     }

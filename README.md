@@ -104,7 +104,7 @@ buildscript {
   dependencies {
     ...
     // 头条火山，每次升级记得调整版本
-    classpath 'com.bytedance.applog:RangersAppLog-All-plugin:6.10.1'
+    classpath 'com.bytedance.applog:RangersAppLog-All-plugin:6.16.2'
   }
 }
 
