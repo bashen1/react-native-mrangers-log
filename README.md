@@ -6,9 +6,9 @@
 
 `3.0.0 版本支持ALink，并且调整集成与初始化方式。最后一个老版本为2.2.1`
 
-Android SDK Version: 6.13.3
+Android SDK Version: 6.16.2
 
-iOS SDK Version: 6.13.1
+iOS SDK Version: 6.16.2
 
 ## 开始
 
