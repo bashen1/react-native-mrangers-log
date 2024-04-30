@@ -6,9 +6,13 @@
 
 `3.0.0 版本支持ALink，并且调整集成与初始化方式。最后一个老版本为2.2.1`
 
-Android SDK Version: 6.16.2
+Android SDK Version: 6.16.6
 
-iOS SDK Version: 6.16.2
+iOS SDK Version: 6.16.6
+
+TODO 对于风控子库的解释，后期看官网集成文档，看能否移除，暂时做保留
+
+「和后端同学确认，目前官网反作弊的库已经下掉了，已经不在官网展示了，这边用之前的就可以，不需要更新子库的版本，对功能是没有影响」
 
 ## 开始
 
@@ -104,7 +108,7 @@ buildscript {
   dependencies {
     ...
     // 头条火山，每次升级记得调整版本
-    classpath 'com.bytedance.applog:RangersAppLog-All-plugin:6.16.2'
+    classpath 'com.bytedance.applog:RangersAppLog-All-plugin:6.16.6'
   }
 }
 
