@@ -322,8 +322,8 @@ RCT_REMAP_METHOD(multiply,
     config.logNeedEncrypt = YES; // 是否加密日志，默认加密。release版本请设置为 YES
     config.showDebugLog = NO; // 是否在控制台输出日志，仅调试使用，需要同时设置logger。release版本请设置为 NO
     // config.logger = ^(NSString * _Nullable log) {NSLog(@"%@",log);}; //如果 showDebugLog设置为 YES 请打开这里的注释
-    
-    [BDAutoTrack startTrackWithConfig: config]; //初始化
+
+    [BDAutoTrack sharedTrackWithConfig: config];
     [BDAutoTrack setALinkRoutingDelegate: aLinkRoutingDelegate]; // 调用顺序需要在初始化之后
     // [BDAutoTrack startTrack]; // 开始记录，注释掉也可以在模块中start开启【隐私合规之后】
 }
