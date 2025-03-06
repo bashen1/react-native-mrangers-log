@@ -6,9 +6,9 @@
 
 `3.0.0 版本支持ALink，并且调整集成与初始化方式。最后一个老版本为2.2.1`
 
-Android SDK Version: 6.16.6
+Android SDK Version: 6.17.0
 
-iOS SDK Version: 6.16.6
+iOS SDK Version: 6.17.2
 
 TODO 对于风控子库的解释，后期看官网集成文档，看能否移除，暂时做保留
 
@@ -108,7 +108,7 @@ buildscript {
   dependencies {
     ...
     // 头条火山，每次升级记得调整版本
-    classpath 'com.bytedance.applog:RangersAppLog-All-plugin:6.16.6'
+    classpath 'com.bytedance.applog:RangersAppLog-All-plugin:6.17.0'
   }
 }
 
