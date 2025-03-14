@@ -11,6 +11,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
+import org.json.JSONObject
 
 class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
@@ -123,28 +124,24 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    fun getDeviceIDSync():String? {
+    fun getDeviceIDSync(): String? {
         return AppLog.getDid()
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    fun getUserUniqueIDSync():String? {
+    fun getUserUniqueIDSync(): String? {
         return AppLog.getUserUniqueID()
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    fun getSsidSync():String? {
+    fun getSsidSync(): String? {
         return AppLog.getSsid()
     }
 
     @ReactMethod
     fun getAttributionData(promise: Promise) {
         if (attributionData != null) {
-            val params = Arguments.createMap()
-            for ((key, value) in attributionData!!) {
-                params.putString(key, value)
-            }
-            promise.resolve(params)
+            promise.resolve(attributionData)
         } else {
             promise.resolve(null)
         }
@@ -160,51 +157,42 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
     }
 
     companion object {
-        var attributionData: Map<String, String?>? = null
+        var attributionData: JSONObject? = null
         var applicationContext: ReactApplicationContext? = null
 
         @JvmStatic
         fun initializeSDK(
-                application: Application,
-                appId: String,
-                channel: String,
-                isMacEnable: Boolean,
-                isAndroidIdEnabled: Boolean,
-                isOaidEnabled: Boolean,
-                isLogEnable: Boolean
+            application: Application,
+            appId: String,
+            channel: String,
+            isMacEnable: Boolean,
+            isAndroidIdEnabled: Boolean,
+            isOaidEnabled: Boolean,
+            isLogEnable: Boolean
         ) {
             RangerApplog.initializeRangerApplog(
-                    application,
-                    appId,
-                    channel,
-                    isMacEnable,
-                    isAndroidIdEnabled,
-                    isOaidEnabled,
-                    isLogEnable
+                application,
+                appId,
+                channel,
+                isMacEnable,
+                isAndroidIdEnabled,
+                isOaidEnabled,
+                isLogEnable
             )
         }
 
         @JvmStatic
-        fun onAttributionData(@Nullable routingInfo: Map<String, String?>?, @Nullable exception: Exception?) {
+        fun onAttributionData(routingInfo: JSONObject?, exception: Exception?) {
             if (routingInfo !== null) {
-                val params = Arguments.createMap()
-                for ((key, value) in routingInfo) {
-                    params.putString(key, value)
-                }
                 attributionData = routingInfo
-                applicationContext?.getJSModule(RCTDeviceEventEmitter::class.java)?.emit("AttributionDataEvent", params)
+                applicationContext?.getJSModule(RCTDeviceEventEmitter::class.java)?.emit("AttributionDataEvent", routingInfo)
             }
         }
 
         @JvmStatic
-        fun onALinkData(@Nullable routingInfo: Map<String, String?>?, @Nullable exception: Exception?) {
+        fun onALinkData(routingInfo: JSONObject?, exception: Exception?) {
             if (routingInfo !== null) {
-                val params = Arguments.createMap()
-                for ((key, value) in routingInfo) {
-                    params.putString(key, value)
-                }
-
-                applicationContext?.getJSModule(RCTDeviceEventEmitter::class.java)?.emit("ALinkDataEvent", params)
+                applicationContext?.getJSModule(RCTDeviceEventEmitter::class.java)?.emit("ALinkDataEvent", routingInfo)
             }
         }
     }

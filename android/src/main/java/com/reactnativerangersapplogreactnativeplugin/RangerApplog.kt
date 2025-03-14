@@ -7,16 +7,17 @@ import com.bytedance.applog.ILogger
 import com.bytedance.applog.InitConfig
 import com.bytedance.applog.alink.IALinkListener
 import com.bytedance.applog.util.UriConstants
+import org.json.JSONObject
 
 object RangerApplog {
     fun initializeRangerApplog(
-            application: Application?,
-            appId: String?,
-            channel: String?,
-            isMacEnable: Boolean,
-            isAndroidIdEnabled: Boolean,
-            isOaidEnabled: Boolean,
-            isLogEnable: Boolean
+        application: Application?,
+        appId: String?,
+        channel: String?,
+        isMacEnable: Boolean,
+        isAndroidIdEnabled: Boolean,
+        isOaidEnabled: Boolean,
+        isLogEnable: Boolean
     ) {
         val config = InitConfig(appId!!, channel!!) // appid和渠道，appid如不清楚请联系客户成功经理，注意第二个参数 channel 不能为空
         config.setUriConfig(UriConstants.DEFAULT) //上报地址，只支持中国
@@ -39,16 +40,16 @@ object RangerApplog {
 
         //ALink监听回调
         AppLog.setALinkListener(object : IALinkListener {
-            override fun onALinkData(routingInfo: Map<String, String?>?, exception: Exception?) {
+            override fun onALinkData(routingInfo: JSONObject?, exception: Exception?) {
                 RangersApplogReactnativePluginModule.onALinkData(routingInfo, exception)
             }
 
-            override fun onAttributionData(routingInfo: Map<String, String?>?, exception: Exception?) {
+            override fun onAttributionData(routingInfo: JSONObject?, exception: Exception?) {
                 RangersApplogReactnativePluginModule.onAttributionData(routingInfo, exception)
             }
 
             override fun onAttributionFailedCallback(exception: Exception?) {
-//                TODO("Not yet implemented")
+                // TODO("Not yet implemented")
             }
         })
         // AppLog.start() //开启上报【隐私合规】,需要调用模块的start的方法
