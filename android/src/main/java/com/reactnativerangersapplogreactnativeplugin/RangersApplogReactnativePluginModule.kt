@@ -2,9 +2,7 @@ package com.reactnativerangersapplogreactnativeplugin
 
 import android.app.Application
 import android.net.Uri
-import androidx.annotation.Nullable
 import com.bytedance.applog.AppLog
-import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -141,7 +139,8 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
     @ReactMethod
     fun getAttributionData(promise: Promise) {
         if (attributionData != null) {
-            promise.resolve(attributionData)
+            val params = convertJsonToMap(attributionData!!)
+            promise.resolve(params)
         } else {
             promise.resolve(null)
         }
@@ -184,15 +183,17 @@ class RangersApplogReactnativePluginModule(reactContext: ReactApplicationContext
         @JvmStatic
         fun onAttributionData(routingInfo: JSONObject?, exception: Exception?) {
             if (routingInfo !== null) {
+                val params = convertJsonToMap(routingInfo)
                 attributionData = routingInfo
-                applicationContext?.getJSModule(RCTDeviceEventEmitter::class.java)?.emit("AttributionDataEvent", routingInfo)
+                applicationContext?.getJSModule(RCTDeviceEventEmitter::class.java)?.emit("AttributionDataEvent", params)
             }
         }
 
         @JvmStatic
         fun onALinkData(routingInfo: JSONObject?, exception: Exception?) {
             if (routingInfo !== null) {
-                applicationContext?.getJSModule(RCTDeviceEventEmitter::class.java)?.emit("ALinkDataEvent", routingInfo)
+                val params = convertJsonToMap(routingInfo)
+                applicationContext?.getJSModule(RCTDeviceEventEmitter::class.java)?.emit("ALinkDataEvent", params)
             }
         }
     }
