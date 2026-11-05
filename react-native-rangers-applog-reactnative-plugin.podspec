@@ -27,6 +27,5 @@ Pod::Spec.new do |s|
     a.dependency "RangersAppLog/UITracker", '6.17.2' # ⽆埋点日志采集SDK，用于无埋点事件采集
     # a.dependency "RangersAppLog/Picker", '6.17.2' # 圈选SDK，用于无埋点事件圈选
     # a.dependency "RangersAppLog/OneKit", '6.17.2'
-    a.dependency "VolMetaSecML", '4.3.0.5-bugfix' #反作弊风控子库
   end
 end
