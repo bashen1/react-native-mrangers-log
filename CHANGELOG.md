@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.9.4
+
+- 升级 Android SDK 至 6.17.1
+- 升级 iOS SDK 至 6.17.15
+
 ## 3.9.3
 
 - 移除iOS与Android的风控子库集成
