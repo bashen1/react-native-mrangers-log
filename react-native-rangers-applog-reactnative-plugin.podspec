@@ -33,13 +33,13 @@ Pod::Spec.new do |s|
 
   s.resources    = "ios/sdk/Resources/RangersAppLog.bundle"
   s.vendored_frameworks = [
-    "ios/sdk/RangersAppLogCore.xcframework",
-    "ios/sdk/RangersAppLogEncryptor_VOLC.xcframework",
-    "ios/sdk/RangersAppLogHost_CN.xcframework",
-    "ios/sdk/RangersAppLogLog.xcframework",
-    "ios/sdk/RangersAppLogUITracker.xcframework",
-    "ios/sdk/RangersAppLogUnique.xcframework",
-    "ios/sdk/VolcEngineEncryptor.xcframework",
+    "ios/sdk/XCFrameworks/RangersAppLogCore.xcframework",
+    "ios/sdk/XCFrameworks/RangersAppLogEncryptor_VOLC.xcframework",
+    "ios/sdk/XCFrameworks/RangersAppLogHost_CN.xcframework",
+    "ios/sdk/XCFrameworks/RangersAppLogLog.xcframework",
+    "ios/sdk/XCFrameworks/RangersAppLogUITracker.xcframework",
+    "ios/sdk/XCFrameworks/RangersAppLogUnique.xcframework",
+    "ios/sdk/XCFrameworks/VolcEngineEncryptor.xcframework",
   ]
 
   s.frameworks = "Foundation", "UIKit", "CoreGraphics", "QuartzCore", "WebKit",
