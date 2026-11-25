@@ -18,6 +18,19 @@ Pod::Spec.new do |s|
     "ios/RangersAppLogModule.{h,m,mm,swift}",
     "ios/sdk/Headers/RangersAppLog/*.h",
   ]
+
+  # 集成本地 xcframework 后，CocoaPods 会把 ios/sdk/Headers/RangersAppLog/*.h
+  # 平铺到 Pods/Headers/Public/<pod>/ 下（丢失 RangersAppLog/ 层级），
+  # 导致源码里的 #import <RangersAppLog/xxx.h> 找不到头文件。
+  # 这里显式把 ios/sdk/Headers 加入搜索路径，使 <RangersAppLog/xxx.h> 始终
+  # 从源码目录解析；RangersAppLogModule.h 仍由 Pods/Headers/Public 提供。
+  s.pod_target_xcconfig = {
+    "HEADER_SEARCH_PATHS" => '"${PODS_TARGET_SRCROOT}/ios/sdk/Headers"',
+  }
+  s.user_target_xcconfig = {
+    "HEADER_SEARCH_PATHS" => '"${PODS_ROOT}/../../node_modules/react-native-mrangers-log/ios/sdk/Headers"',
+  }
+
   s.resources    = "ios/sdk/Resources/RangersAppLog.bundle"
   s.vendored_frameworks = [
     "ios/sdk/RangersAppLogCore.xcframework",
