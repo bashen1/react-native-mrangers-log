@@ -14,18 +14,28 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://code.byted.org/iOS_Library/rangers_applog_reactnative_plugin.git", :tag => "#{s.version}" }
 
 
-  s.source_files = "ios/**/*.{h,m,mm,swift}"
+  s.source_files = [
+    "ios/RangersAppLogModule.{h,m,mm,swift}",
+    "ios/sdk/Headers/RangersAppLog/*.h",
+  ]
+  s.resources    = "ios/sdk/Resources/RangersAppLog.bundle"
+  s.vendored_frameworks = [
+    "ios/sdk/RangersAppLogCore.xcframework",
+    "ios/sdk/RangersAppLogEncryptor_VOLC.xcframework",
+    "ios/sdk/RangersAppLogHost_CN.xcframework",
+    "ios/sdk/RangersAppLogLog.xcframework",
+    "ios/sdk/RangersAppLogUITracker.xcframework",
+    "ios/sdk/RangersAppLogUnique.xcframework",
+    "ios/sdk/VolcEngineEncryptor.xcframework",
+  ]
 
+  s.frameworks = "Foundation", "UIKit", "CoreGraphics", "QuartzCore", "WebKit",
+                 "SystemConfiguration", "CoreTelephony", "Security", "CoreLocation",
+                 "AVFoundation", "CoreMedia", "StoreKit", "JavaScriptCore",
+                 "CFNetwork", "ImageIO", "CoreText", "CoreServices",
+                 "SafariServices", "AdSupport"
+  s.weak_frameworks = "CoreML", "AppTrackingTransparency", "Network"
+  s.libraries = "z", "sqlite3"
 
   s.dependency "React-Core"
-
-  s.subspec "RangersAppLog" do |a|
-    a.dependency "RangersAppLog/Host/CN", '6.17.2'
-    a.dependency "RangersAppLog/Core", '6.17.2'
-    a.dependency "RangersAppLog/Unique", '6.17.2' # 采集IDFA，如果不希望读取IDFA，可不集成
-    a.dependency "RangersAppLog/Log", '6.17.2'
-    a.dependency "RangersAppLog/UITracker", '6.17.2' # ⽆埋点日志采集SDK，用于无埋点事件采集
-    # a.dependency "RangersAppLog/Picker", '6.17.2' # 圈选SDK，用于无埋点事件圈选
-    # a.dependency "RangersAppLog/OneKit", '6.17.2'
-  end
 end
